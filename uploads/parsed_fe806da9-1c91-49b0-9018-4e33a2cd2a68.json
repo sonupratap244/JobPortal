@@ -1,0 +1,125 @@
+{
+  "testId": "20",
+  "parsedRows": [
+    {
+      "rowNumber": 2,
+      "raw": {
+        "Question Text": "What does QA stand for?",
+        "Option A": "Quality Analysis",
+        "Option B": "Quick Access",
+        "Option C": "Quality Assurance",
+        "Option D": "Query Alignment",
+        "Correct Answer": "C",
+        "Marks": 1,
+        "Time Limit": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "What does QA stand for?",
+        "optionA": "Quality Analysis",
+        "optionB": "Quick Access",
+        "optionC": "Quality Assurance",
+        "optionD": "Query Alignment",
+        "correct": "C",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 3,
+      "raw": {
+        "Question Text": "Which testing is performed without executing code?",
+        "Option A": "Unit Testing",
+        "Option B": "Static Testing",
+        "Option C": "System Testing",
+        "Option D": "Smoke Testing",
+        "Correct Answer": "B",
+        "Marks": 1,
+        "Time Limit": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "Which testing is performed without executing code?",
+        "optionA": "Unit Testing",
+        "optionB": "Static Testing",
+        "optionC": "System Testing",
+        "optionD": "Smoke Testing",
+        "correct": "B",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 4,
+      "raw": {
+        "Question Text": "Which tool is used for bug tracking?",
+        "Option A": "Jenkins",
+        "Option B": "Jira",
+        "Option C": "Postman",
+        "Option D": "Git",
+        "Correct Answer": "B",
+        "Marks": 1,
+        "Time Limit": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "Which tool is used for bug tracking?",
+        "optionA": "Jenkins",
+        "optionB": "Jira",
+        "optionC": "Postman",
+        "optionD": "Git",
+        "correct": "B",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 5,
+      "raw": {
+        "Question Text": "Which testing ensures new code doesn't break old code?",
+        "Option A": "Smoke Testing",
+        "Option B": "Load Testing",
+        "Option C": "Regression Testing",
+        "Option D": "Alpha Testing",
+        "Correct Answer": "C",
+        "Marks": 1,
+        "Time Limit": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "Which testing ensures new code doesn't break old code?",
+        "optionA": "Smoke Testing",
+        "optionB": "Load Testing",
+        "optionC": "Regression Testing",
+        "optionD": "Alpha Testing",
+        "correct": "C",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 6,
+      "raw": {
+        "Question Text": "What is the first phase of STLC?",
+        "Option A": "Test Planning",
+        "Option B": "Test Execution",
+        "Option C": "Requirement Analysis",
+        "Option D": "Test Closure",
+        "Correct Answer": "C",
+        "Marks": 1,
+        "Time Limit": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "What is the first phase of STLC?",
+        "optionA": "Test Planning",
+        "optionB": "Test Execution",
+        "optionC": "Requirement Analysis",
+        "optionD": "Test Closure",
+        "correct": "C",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    }
+  ]
+}

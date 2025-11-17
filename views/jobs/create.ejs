@@ -1,0 +1,77 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<!-- Responsive Wrapper -->
+<div class="lg:ml-64 mt-11 p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
+
+  <h1 class="text-2xl sm:text-3xl font-bold mb-6 text-gray-700 block lg:text-center lg:ml-auto">
+  Add New Job
+</h1>
+
+  <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md max-w-full sm:max-w-xl mx-auto">
+
+    <form action="/jobs/create" method="POST" class="space-y-4">
+
+      <input 
+        type="text" 
+        name="title" 
+        placeholder="Job Title" 
+        class="border p-2 w-full rounded"
+        required
+      >
+
+      <input 
+        type="text" 
+        name="experienceLevel" 
+        placeholder="Experience (e.g. 2-3 Years)" 
+        class="border p-2 w-full rounded" 
+        required
+      >
+
+      <input 
+        type="text" 
+        name="location" 
+        placeholder="Location" 
+        class="border p-2 w-full rounded" 
+        required
+      >
+
+      <input 
+        type="text" 
+        name="ctc" 
+        placeholder="CTC" 
+        class="border p-2 w-full rounded" 
+        required
+      >
+
+      <!-- Description -->
+      <textarea
+        name="description"
+        placeholder="Job Description (Responsibilities, Requirements, etc.)"
+        class="border p-2 w-full rounded h-32 resize-none"
+        required
+      ></textarea>
+
+      <select 
+        name="status" 
+        onchange="this.form.submit()" 
+        class="border px-2 py-2 rounded text-sm w-full sm:w-auto"
+      >
+        <option value="Active" <%= (job && job.status === 'Active') ? 'selected' : '' %>>
+          Active
+        </option>
+        <option value="Inactive" <%= (job && job.status === 'Inactive') ? 'selected' : '' %>>
+          Inactive
+        </option>
+      </select>
+
+      <button 
+        type="submit" 
+        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow transition duration-200 w-full sm:w-auto"
+      >
+        Add Job
+      </button>
+
+    </form>
+  </div>
+</div>

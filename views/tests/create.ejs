@@ -1,0 +1,102 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<main class="ml-64 p-6 max-w-5xl mx-auto">
+
+  <h1 class="text-3xl mb-6">Create / Manage Tests</h1>
+
+  <form id="testForm" action="/tests/create" method="POST" class="bg-white p-6 rounded-lg shadow mb-12 space-y-6">
+
+    <div>
+      <label class="block mb-1 font-semibold">Title</label>
+      <input type="text" name="title" required class="w-full border p-2 rounded focus:ring focus:ring-blue-300" />
+    </div>
+
+    <div>
+      <label class="block mb-1 font-semibold">Description</label>
+      <textarea name="description" rows="3" class="w-full border p-2 rounded focus:ring focus:ring-blue-300"></textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block mb-1 font-semibold">Passing Marks</label>
+        <input type="number" name="passingMarks" class="w-full border p-2 rounded focus:ring focus:ring-blue-300" />
+      </div>
+      <div>
+        <label class="block mb-1 font-semibold">Duration (minutes)</label>
+        <input type="number" name="duration" class="w-full border p-2 rounded focus:ring focus:ring-blue-300" />
+      </div>
+    </div>
+
+    <div id="questionsContainer" class="space-y-8">
+      <!-- dynamic question blocks added here -->
+    </div>
+
+    <button type="button" id="addQuestionBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">+ Add Question</button>
+    <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700">Save Test</button>
+  </form>
+
+  <!-- Existing Test List -->
+  <section>
+    <h2 class="text-2xl font-semibold mb-4">Existing Tests</h2>
+    <% tests.forEach(test => { %>
+      <div class="mb-6 p-4 bg-white rounded shadow">
+        <h3 class="text-xl font-bold"><%= test.title %></h3>
+        <p class="text-gray-600 mb-2"><%= test.description %></p>
+        <p>Passing Marks: <%= test.passingMarks %>, Duration: <%= test.duration %> min</p>
+        <a href="/tests/take/<%= test.id %>" class="text-blue-600 hover:underline">Take Test</a>
+      </div>
+    <% }) %>
+  </section>
+</main>
+
+<script>
+  const questionsContainer = document.getElementById('questionsContainer');
+  const addQuestionBtn = document.getElementById('addQuestionBtn');
+
+  addQuestionBtn.addEventListener('click', () => {
+    const qIndex = questionsContainer.children.length;
+    const div = document.createElement('div');
+    div.className = 'question-block p-4 bg-gray-50 rounded';
+
+    div.innerHTML = `
+      <h3 class="font-semibold mb-2">Question ${qIndex + 1}</h3>
+      <div class="mb-2">
+        <textarea name="questions[${qIndex}][text]" placeholder="Question text" required class="w-full border p-2 rounded"></textarea>
+      </div>
+      <div class="mb-2">
+        <label>Type:
+          <select name="questions[${qIndex}][type]" class="border p-1 rounded">
+            <option value="mcq">MCQ</option>
+            <option value="true_false">True / False</option>
+            <option value="text">Text</option>
+          </select>
+        </label>
+      </div>
+      <div class="mb-2">
+        <input type="number" name="questions[${qIndex}][marks]" placeholder="Marks" class="w-full border p-2 rounded" />
+      </div>
+      <div class="options-container space-y-2">
+        <div class="option flex items-center space-x-2">
+          <input type="text" name="questions[${qIndex}][options][0][text]" placeholder="Option text" required class="flex-1 border p-2 rounded" />
+          <label><input type="checkbox" name="questions[${qIndex}][options][0][isCorrect]" /> Correct</label>
+        </div>
+      </div>
+      <button type="button" class="addOptionBtn bg-blue-500 text-white px-3 py-1 rounded mt-2">+ Option</button>
+    `;
+
+    questionsContainer.appendChild(div);
+
+    div.querySelector('.addOptionBtn').addEventListener('click', () => {
+      const optsDiv = div.querySelector('.options-container');
+      const optCount = optsDiv.children.length;
+      const optHtml = document.createElement('div');
+      optHtml.className = 'option flex items-center space-x-2';
+      optHtml.innerHTML = `
+        <input type="text" name="questions[${qIndex}][options][${optCount}][text]" placeholder="Option text" required class="flex-1 border p-2 rounded" />
+        <label><input type="checkbox" name="questions[${qIndex}][options][${optCount}][isCorrect]" /> Correct</label>
+      `;
+      optsDiv.appendChild(optHtml);
+    });
+  });
+</script>

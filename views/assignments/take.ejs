@@ -1,0 +1,22 @@
+<%- include('../partials/header') %>
+<h2><%= assignment.title %></h2>
+<p><%= assignment.description %></p>
+<form method="POST" action="/assignments/submit/<%= assignment.code %>">
+  <input type="hidden" name="email" value="<%= (assignment.candidateId ? '' : '') %>" />
+  <% questions.forEach(q => { %>
+    <div class="qcard">
+      <p><strong><%= q.text %></strong></p>
+      <% if (q.type === 'mcq') { %>
+        <% (q.options || []).forEach((opt, i) => { %>
+          <label>
+            <input type="radio" name="<%= q.id %>" value="<%= opt %>" required>
+            <%= opt %>
+          </label><br>
+        <% }) %>
+      <% } else { %>
+        <textarea name="<%= q.id %>"></textarea>
+      <% } %>
+    </div>
+  <% }) %>
+  <button>Submit</button>
+</form>

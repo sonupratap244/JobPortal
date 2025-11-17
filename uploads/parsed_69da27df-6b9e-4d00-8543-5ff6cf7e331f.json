@@ -1,0 +1,135 @@
+{
+  "testId": "20",
+  "parsedRows": [
+    {
+      "rowNumber": 2,
+      "raw": {
+        "Question": "What does QA stand for?",
+        "A": "Quality Analysis",
+        "B": "Quick Access",
+        "C": "Quality Assurance",
+        "D": "Query Alignment",
+        "Correct": "C",
+        "Marks": 1
+      },
+      "errors": [
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "What does QA stand for?",
+        "optionA": "Quality Analysis",
+        "optionB": "Quick Access",
+        "optionC": "Quality Assurance",
+        "optionD": "Query Alignment",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 3,
+      "raw": {
+        "Question": "Which testing is performed without executing code?",
+        "A": "Unit Testing",
+        "B": "Static Testing",
+        "C": "System Testing",
+        "D": "Smoke Testing",
+        "Correct": "B",
+        "Marks": 1
+      },
+      "errors": [
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "Which testing is performed without executing code?",
+        "optionA": "Unit Testing",
+        "optionB": "Static Testing",
+        "optionC": "System Testing",
+        "optionD": "Smoke Testing",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 4,
+      "raw": {
+        "Question": "Which tool is commonly used for bug tracking?",
+        "A": "Jenkins",
+        "B": "Jira",
+        "C": "Postman",
+        "D": "Git",
+        "Correct": "B",
+        "Marks": 1
+      },
+      "errors": [
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "Which tool is commonly used for bug tracking?",
+        "optionA": "Jenkins",
+        "optionB": "Jira",
+        "optionC": "Postman",
+        "optionD": "Git",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 5,
+      "raw": {
+        "Question": "Which testing ensures new code doesn't break old code?",
+        "A": "Smoke Testing",
+        "B": "Load Testing",
+        "C": "Regression Testing",
+        "D": "Alpha Testing",
+        "Correct": "C",
+        "Marks": 1
+      },
+      "errors": [
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "Which testing ensures new code doesn't break old code?",
+        "optionA": "Smoke Testing",
+        "optionB": "Load Testing",
+        "optionC": "Regression Testing",
+        "optionD": "Alpha Testing",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 6,
+      "raw": {
+        "Question": "What is the first phase of STLC?",
+        "A": "Test Planning",
+        "B": "Test Execution",
+        "C": "Requirement Analysis",
+        "D": "Test Closure",
+        "Correct": "C",
+        "Marks": 1
+      },
+      "errors": [
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "What is the first phase of STLC?",
+        "optionA": "Test Planning",
+        "optionB": "Test Execution",
+        "optionC": "Requirement Analysis",
+        "optionD": "Test Closure",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    }
+  ]
+}

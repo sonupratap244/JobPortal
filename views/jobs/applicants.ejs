@@ -1,0 +1,144 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="lg:ml-64 mt-6 p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
+
+  <h1 class="text-2xl sm:text-3xl font-bold mb-6 text-gray-700">
+    Applicants for <span class="text-blue-600"><%= job.title %></span>
+  </h1>
+
+  <a href="/jobs/list"
+     class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md mb-6 inline-block text-sm sm:text-base"
+     title="Go back to job listings">
+     <i class="fa-solid fa-arrow-left"></i> Back to Jobs
+  </a>
+
+  <% if (applicants.length === 0) { %>
+    <div class="bg-white p-6 rounded shadow text-center text-gray-600">
+      No applicants found for this job.
+    </div>
+  <% } else { %>
+
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+      <table class="min-w-full divide-y divide-gray-200 text-sm">
+        <thead class="bg-blue-100">
+          <tr>
+            <th class="px-4 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Name</th>
+            <th class="px-4 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Email</th>
+            <th class="px-4 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Contact</th>
+            <th class="px-4 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Status</th>
+            <th class="px-4 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Assign Test</th>
+            <th class="px-4 sm:px-6 py-3 text-left font-medium text-gray-700 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody class="bg-white divide-y divide-gray-200">
+
+          <% applicants.forEach(applicant => { %>
+            <tr class="hover:bg-gray-50 transition">
+
+              <td class="px-4 sm:px-6 py-4 text-gray-800 font-medium" title="Candidate's full name">
+                <%= applicant.name %>
+              </td>
+
+              <td class="px-4 sm:px-6 py-4 text-gray-600" title="Candidate's email address">
+                <%= applicant.email %>
+              </td>
+
+              <td class="px-4 sm:px-6 py-4 text-gray-600" title="Candidate's contact number">
+                <%= applicant.contactNo %>
+              </td>
+
+              <!-- Status Dropdown -->
+              <td class="px-4 sm:px-6 py-4 text-gray-600">
+                <form action="/candidates/<%= applicant.id %>/status" method="POST">
+                  <select name="status"
+                          onchange="this.form.submit()"
+                          class="border border-gray-300 rounded p-1 text-xs sm:text-sm cursor-pointer w-full sm:w-auto"
+                          title="Select and update applicant's current status">
+
+                    <% const statuses = ['Pending', 'In Review', 'Interview', 'Selected', 'Rejected']; %>
+                    <% statuses.forEach(s => { %>
+                      <option value="<%= s %>" <%= (applicant.status === s) ? 'selected' : '' %>><%= s %></option>
+                    <% }) %>
+
+                  </select>
+                </form>
+              </td>
+
+              <!-- Assign Test -->
+              <td class="px-4 sm:px-6 py-4 text-gray-600">
+
+                <% if (tests.length > 0) { %>
+
+                  <% if (applicant.testAssigned) { %>
+
+                    <% const assignedTest = tests.find(t => t.id === applicant.testAssigned); %>
+
+                    <div class="flex items-center gap-2" title="Test already assigned to this applicant">
+                      <i class="fa-solid fa-circle-check text-green-600 text-lg"></i>
+
+                      <% if (assignedTest) { %>
+                        <span class="text-gray-700 text-xs sm:text-sm">(<%= assignedTest.title %>)</span>
+                      <% } %>
+                    </div>
+
+                  <% } else { %>
+
+                    <form action="/jobs/tests/assign"
+                          method="POST"
+                          class="flex flex-col sm:flex-row gap-2 items-start sm:items-center"
+                          title="Assign test to applicant">
+
+                      <input type="hidden" name="candidateId" value="<%= applicant.id %>">
+                      <input type="hidden" name="email" value="<%= applicant.email %>">
+
+                      <select name="testId"
+                              class="border border-gray-300 p-1 rounded text-xs sm:text-sm cursor-pointer w-full sm:w-auto"
+                              title="Choose a test to assign"
+                              required>
+
+                        <option value="">Select Test</option>
+
+                        <% tests.forEach(t => { %>
+                          <option value="<%= t.id %>"><%= t.title %></option>
+                        <% }) %>
+
+                      </select>
+
+                      <button type="submit"
+                              class="bg-blue-500 text-white px-3 py-1 rounded text-xs sm:text-sm hover:bg-blue-600 w-full sm:w-auto"
+                              title="Send assessment to candidate">
+                        <i class="fa-solid fa-paper-plane"></i>
+                      </button>
+                    </form>
+
+                  <% } %>
+
+                <% } else { %>
+
+                  <span class="text-gray-400 text-xs sm:text-sm" title="No tests available currently">
+                    No tests available
+                  </span>
+
+                <% } %>
+
+              </td>
+
+              <!-- Actions -->
+              <td class="px-4 sm:px-6 py-4">
+                <a href="/candidates/view/<%= applicant.id %>"
+                   class="text-blue-600 hover:text-blue-800 font-medium text-lg"
+                   title="View candidate details">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+              </td>
+
+            </tr>
+          <% }) %>
+
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>

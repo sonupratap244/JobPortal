@@ -1,0 +1,150 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<!-- Responsive wrapper with proper top spacing + sidebar spacing -->
+<div class="lg:ml-64 mt-11 p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
+
+  <h1 class="text-3xl font-bold mb-6 text-gray-700">Edit <%= candidate.name %>'s Profile</h1>
+
+  <% if (error) { %>
+    <div class="bg-red-100 text-red-700 p-3 mb-4 rounded"><%= error %></div>
+  <% } %>
+
+  <form action="/candidates/update/<%= candidate.id %>" method="POST" enctype="multipart/form-data" 
+        class="bg-white p-6 rounded-xl shadow-md">
+
+    <!-- BASIC INFO -->
+    <h2 class="text-xl font-semibold mb-2">Basic Information</h2>
+
+    <!-- 100% Responsive Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+      <input type="text" name="name" placeholder="Full Name" value="<%= candidate.name %>" class="border p-2 rounded w-full">
+      <input type="email" name="email" placeholder="Email" value="<%= candidate.email %>" class="border p-2 rounded w-full">
+      <input type="text" name="contactNo" placeholder="Contact No." value="<%= candidate.contactNo %>" class="border p-2 rounded w-full">
+
+      <input type="date" name="dob" value="<%= candidate.dob ? candidate.dob.toISOString().split('T')[0] : '' %>" 
+             class="border p-2 rounded w-full">
+
+      <input type="number" name="age" placeholder="Age" value="<%= candidate.age %>" class="border p-2 rounded w-full">
+      <input type="text" name="maritalStatus" placeholder="Marital Status" value="<%= candidate.maritalStatus %>" class="border p-2 rounded w-full">
+
+      <input type="text" name="address" placeholder="Address" value="<%= candidate.address %>" 
+             class="border p-2 rounded w-full sm:col-span-2">
+
+      <input type="text" name="experienceYears" placeholder="Experience (Years)" value="<%= candidate.experienceYears %>" class="border p-2 rounded w-full">
+
+      <label class="flex items-center text-sm">
+        <input type="checkbox" name="fresher" <%= candidate.fresher ? 'checked' : '' %> class="mr-2"> Fresher
+      </label>
+
+    </div>
+
+    <!-- EXPERIENCES -->
+    <h2 class="text-xl font-semibold mt-6 mb-2">Experiences</h2>
+    <div id="experiences-container">
+
+      <% candidate.Experiences.forEach((exp, idx) => { %>
+        <div class="mb-4 border p-4 rounded bg-gray-50">
+
+          <input type="hidden" name="experiences[id][]" value="<%= exp.id %>">
+
+          <input type="text" name="experiences[company][]" placeholder="Company" value="<%= exp.company %>"
+                 class="border p-2 rounded mb-2 w-full">
+
+          <input type="text" name="experiences[designation][]" placeholder="Designation" value="<%= exp.designation %>"
+                 class="border p-2 rounded mb-2 w-full">
+
+          <input type="date" name="experiences[from][]" value="<%= exp.from ? exp.from.toISOString().split('T')[0] : '' %>"
+                 class="border p-2 rounded mb-2 w-full">
+
+          <input type="date" name="experiences[to][]" value="<%= exp.to ? exp.to.toISOString().split('T')[0] : '' %>"
+                 class="border p-2 rounded mb-2 w-full">
+
+          <input type="text" name="experiences[salary][]" placeholder="Salary" value="<%= exp.salary %>"
+                 class="border p-2 rounded mb-2 w-full">
+
+          <input type="text" name="experiences[reasonLeaving][]" placeholder="Reason for Leaving" value="<%= exp.reasonLeaving %>"
+                 class="border p-2 rounded mb-2 w-full">
+
+        </div>
+      <% }) %>
+
+    </div>
+
+    <!-- QUALIFICATIONS -->
+    <h2 class="text-xl font-semibold mt-6 mb-2">Qualifications</h2>
+    <div id="qualifications-container">
+
+      <% candidate.Qualifications.forEach((q, idx) => { %>
+        <div class="mb-4 border p-4 rounded bg-gray-50">
+
+          <input type="hidden" name="qualifications[id][]" value="<%= q.id %>">
+
+          <input type="text" name="qualifications[course][]" placeholder="Course" value="<%= q.course %>" class="border p-2 rounded mb-2 w-full">
+          <input type="text" name="qualifications[board][]" placeholder="Board/University" value="<%= q.board %>" class="border p-2 rounded mb-2 w-full">
+          <input type="text" name="qualifications[year][]" placeholder="Year" value="<%= q.year %>" class="border p-2 rounded mb-2 w-full">
+          <input type="text" name="qualifications[division][]" placeholder="Division" value="<%= q.division %>" class="border p-2 rounded mb-2 w-full">
+
+        </div>
+      <% }) %>
+
+    </div>
+
+    <!-- REFERENCES -->
+    <h2 class="text-xl font-semibold mt-6 mb-2">References</h2>
+    <div id="references-container">
+
+      <% candidate.References.forEach((r, idx) => { %>
+        <div class="mb-4 border p-4 rounded bg-gray-50">
+
+          <input type="hidden" name="references[id][]" value="<%= r.id %>">
+
+          <input type="text" name="references[name][]" placeholder="Name" value="<%= r.name %>" class="border p-2 rounded mb-2 w-full">
+          <input type="text" name="references[designation][]" placeholder="Designation" value="<%= r.designation %>" class="border p-2 rounded mb-2 w-full">
+          <input type="text" name="references[company][]" placeholder="Company" value="<%= r.company %>" class="border p-2 rounded mb-2 w-full">
+
+        </div>
+      <% }) %>
+
+    </div>
+
+    <!-- SKILLS -->
+    <h2 class="text-xl font-semibold mt-6 mb-2">Questionnaire / Skills</h2>
+
+    <div class="grid grid-cols-1 gap-4">
+      <input type="text" name="technicalSkills" placeholder="Key Technical Expertise"
+             value="<%= candidate.Questionnaire ? candidate.Questionnaire.keyTechnicalExpertise : '' %>"
+             class="border p-2 rounded w-full">
+
+      <input type="text" name="strengths" placeholder="Major Strengths"
+             value="<%= candidate.Questionnaire ? candidate.Questionnaire.majorStrengths : '' %>"
+             class="border p-2 rounded w-full">
+
+      <input type="text" name="achievements" placeholder="Major Achievements"
+             value="<%= candidate.Questionnaire ? candidate.Questionnaire.majorAchievements : '' %>"
+             class="border p-2 rounded w-full">
+    </div>
+
+    <!-- DOCUMENTS -->
+    <h2 class="text-xl font-semibold mt-6 mb-2">Documents</h2>
+
+    <% if (candidate.documents && candidate.documents.length > 0) { %>
+      <ul class="list-disc pl-5 mb-4">
+        <% candidate.documents.split(',').forEach(doc => { %>
+          <li><a href="/uploads/<%= doc %>" target="_blank" class="text-blue-500 hover:underline"><%= doc %></a></li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <input type="file" name="documents" multiple class="mb-4">
+
+    <button type="submit" class="bg-blue-500 text-white p-3 rounded hover:bg-blue-600 w-full sm:w-auto">
+      Update Candidate
+    </button>
+
+  </form>
+
+</div>
+
+<%- include('../partials/footer') %>

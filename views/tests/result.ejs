@@ -1,0 +1,33 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="flex">
+  <div class="w-64"></div>
+  <main class="flex-1 p-6 max-w-4xl mx-auto bg-white rounded shadow">
+    <h1 class="text-3xl mb-4">Result for <%= test.title %></h1>
+    <p>Total Marks: <%= totalMarks %></p>
+    <p>Obtained: <%= obtained %></p>
+    <p>Status: <span class="<%= passed ? 'text-green-600' : 'text-red-600' %>"><%= passed ? 'Passed' : 'Failed' %></span></p>
+
+    <hr class="my-6" />
+
+    <h2 class="text-2xl mb-4">Breakdown</h2>
+    <% test.questions.forEach(q => { %>
+      <div class="mb-4">
+        <p><strong>Q:</strong> <%= q.text %> — (<%= q.marks %> marks)</p>
+        <% 
+          const ua = answers.find(a => a.questionId === q.id);
+          const sel = ua && ua.selectedOption;
+          const cor = q.options.find(o => o.isCorrect);
+          const corText = cor ? cor.text : 'N/A';
+          const yourText = sel ? sel.text : (ua && ua.textAnswer) || 'No answer';
+          const isCorrect = sel && cor && sel.id === cor.id;
+        %>
+        <p>Your Answer: <%= yourText %></p>
+        <p>Correct Answer: <%= corText %></p>
+        <p><span class="<%= isCorrect ? 'text-green-600' : 'text-red-600' %>"><%= isCorrect ? 'Correct' : 'Incorrect' %></span></p>
+      </div>
+    <% }) %>
+
+  </main>
+</div>

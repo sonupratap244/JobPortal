@@ -1,0 +1,91 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<!-- Responsive Wrapper -->
+<div class="lg:ml-64 mt-12 p-4 sm:p-6 md:p-8 bg-gray-100 min-h-screen">
+
+  <h1 class="text-xl sm:text-2xl font-bold mb-4 text-gray-700 lg:text-center">Edit Job</h1>
+
+  <% if (error) { %>
+    <div class="bg-red-100 text-red-700 p-2 mb-3 rounded"><%= error %></div>
+  <% } %>
+
+  <form 
+    action="/jobs/edit/<%= job.id %>" 
+    method="POST" 
+    class="space-y-4 bg-white p-4 sm:p-6 rounded shadow-md max-w-full sm:max-w-xl mx-auto"
+  >
+
+    <div>
+      <label class="block text-gray-700 font-semibold">Title</label>
+      <input 
+        type="text" 
+        name="title" 
+        value="<%= job.title %>" 
+        class="border p-2 w-full rounded" 
+        required
+      >
+    </div>
+
+    <div>
+      <label class="block text-gray-700 font-semibold">Experience Level</label>
+      <input 
+        type="text" 
+        name="experienceLevel" 
+        value="<%= job.experienceLevel %>" 
+        class="border p-2 w-full rounded" 
+        required
+      >
+    </div>
+
+    <div>
+      <label class="block text-gray-700 font-semibold">Description</label>
+      <textarea 
+        name="description" 
+        class="border p-2 w-full rounded h-28 resize-none"
+        required
+      ><%= job.description %></textarea>
+    </div>
+
+    <div>
+      <label class="block text-gray-700 font-semibold">Location</label>
+      <input 
+        type="text" 
+        name="location" 
+        value="<%= job.location %>" 
+        class="border p-2 w-full rounded"
+      >
+    </div>
+
+    <div>
+      <label class="block text-gray-700 font-semibold">CTC</label>
+      <input 
+        type="text" 
+        name="ctc" 
+        value="<%= job.ctc %>" 
+        class="border p-2 w-full rounded"
+      >
+    </div>
+
+    <div>
+      <label class="block text-gray-700 font-semibold">Status</label>
+      <select 
+        name="status" 
+        class="border p-2 w-full rounded"
+      >
+        <option value="Active" <%= job.status === 'Active' ? 'selected' : '' %>>Active</option>
+        <option value="Inactive" <%= job.status === 'Inactive' ? 'selected' : '' %>>Inactive</option>
+      </select>
+    </div>
+
+    <div class="flex justify-end">
+      <button 
+        type="submit" 
+        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
+      >
+        Update
+      </button>
+    </div>
+
+  </form>
+</div>

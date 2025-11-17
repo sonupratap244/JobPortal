@@ -1,0 +1,35 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar', { user }) %>
+
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4">Assignments List</h2>
+  <a href="/assignments/create" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mb-4 inline-block">Create New Assignment</a>
+
+  <table class="w-full border-collapse border border-gray-300">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="border p-2">Title</th>
+        <th class="border p-2">Test</th>
+        <th class="border p-2">Candidate</th>
+        <th class="border p-2">Duration</th>
+        <th class="border p-2">Passing Marks</th>
+        <th class="border p-2">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% assignments.forEach(a => { %>
+      <tr>
+        <td class="border p-2"><%= a.title %></td>
+        <td class="border p-2"><%= a.Test ? a.Test.title : '-' %></td>
+        <td class="border p-2"><%= a.candidateId ? a.candidateId : 'All' %></td>
+        <td class="border p-2"><%= a.duration || '-' %></td>
+        <td class="border p-2"><%= a.passingMarks || '-' %></td>
+        <td class="border p-2 space-x-2">
+          <a href="/assignments/take/<%= a.code %>" class="text-blue-600 hover:underline">View/Take</a>
+          <a href="/tests/<%= a.testId %>/edit" class="text-green-600 hover:underline">Edit Test</a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

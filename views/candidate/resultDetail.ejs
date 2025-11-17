@@ -1,0 +1,76 @@
+<%- include('../partials/header') %>
+
+<div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-6 select-none">
+  <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full relative overflow-hidden">
+
+    <div class="absolute inset-0 bg-gradient-to-r from-indigo-100 via-purple-50 to-pink-50 opacity-20 rounded-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 text-center">
+      
+      <!-- Company Logo -->
+      <img 
+        src="https://alobhahrms.com/storage/uploads/logo/logo-dark.png" 
+        alt="Company Logo" 
+        class="h-16 w-auto mx-auto mb-6 rounded-md shadow-sm"
+      >
+
+      <!-- Test Title -->
+      <h2 class="text-3xl font-extrabold text-indigo-700 mb-4">
+        <%= test?.title || "Test Result" %>
+      </h2>
+
+      <!-- Candidate Info -->
+      <p class="text-lg text-gray-700 mb-2 font-semibold">
+        Candidate: <%= result.candidateName %> 
+      </p>
+
+      <!-- Marks -->
+      <p class="text-lg text-gray-700 mb-2 font-semibold">
+        Obtained Marks:
+        <% if (result?.reviewStatus === "Pending") { %>
+          <span class="text-yellow-600 font-bold">Under Review</span>
+        <% } else { %>
+          <span class="text-green-600 font-bold">
+            <%= result?.obtainedMarks || 0 %> / <%= test?.totalMarks || 0 %>
+          </span>
+        <% } %>
+      </p>
+
+      <!-- Status -->
+      <p class="text-lg text-gray-700 mb-2 font-semibold">
+        Status:
+        <% if (result?.reviewStatus === "Pending") { %>
+          <span class="text-yellow-600 font-bold">Pending Review</span>
+        <% } else if (result?.status === "Pass") { %>
+          <span class="text-green-600 font-bold">Pass</span>
+        <% } else { %>
+          <span class="text-red-600 font-bold">Fail</span>
+        <% } %>
+      </p>
+
+      <!-- Interview Call Message -->
+      <% if (result?.status === "Pass" && result?.reviewStatus !== "Pending") { %>
+        <p class="text-indigo-700 font-semibold mt-3">
+          Congratulations! Please wait for the interview call. Our team will contact you soon.
+        </p>
+      <% } %>
+
+      <!-- Date -->
+      <p class="text-gray-500 mt-4 text-sm">
+        Taken on: 
+        <%= result?.createdAt ? new Date(result.createdAt).toDateString() : "N/A" %>
+      </p>
+
+      <div class="my-6 border-t border-gray-200"></div>
+
+      <a 
+        href="/status"
+        class="inline-flex items-center bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 font-semibold transition shadow-md"
+      >
+        Back
+      </a>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

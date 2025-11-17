@@ -1,0 +1,15 @@
+<%- include('../partials/header') %>
+<div class="ml-64 p-8 bg-gray-100 min-h-screen">
+  <h2 class="text-2xl font-bold mb-6">All Tests</h2>
+  <a href="/tests/create" class="bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block">+ Add New Test</a>
+
+  <% if (tests.length > 0) { %>
+    <ul class="bg-white p-4 rounded shadow">
+      <% tests.forEach(t => { %>
+        <li class="border-b py-2"><%= t.title %></li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>No tests created yet.</p>
+  <% } %>
+</div>

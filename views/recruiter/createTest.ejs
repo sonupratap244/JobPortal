@@ -1,0 +1,79 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar', { user }) %>
+
+<!-- Responsive Wrapper -->
+<div class="p-4 sm:p-6 mt-10 lg:p-8 lg:ml-64 bg-gray-50 min-h-screen transition-all duration-300">
+
+  <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow p-6 sm:p-8">
+
+    <h2 class="text-xl sm:text-2xl font-bold mb-6 text-blue-700">
+      Create New Test
+    </h2>
+
+    <form action="/recruiter/tests/create" method="POST" class="space-y-4">
+
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1">Title<span class="text-red-500">*</span></label>
+        <input 
+          type="text" 
+          name="title" 
+          class="w-full border rounded-lg px-3 py-2"
+          required 
+        />
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1">Description<span class="text-red-500">*</span></label>
+        <textarea 
+          name="description" 
+          class="w-full border rounded-lg px-3 py-2 h-24 sm:h-32"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Responsive Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1">Total Marks<span class="text-red-500">*</span></label>
+          <input 
+            type="number" 
+            name="totalMarks" 
+            class="w-full border rounded-lg px-3 py-2"
+            required 
+          />
+        </div>
+
+        <div>
+          <label class="block text-gray-700 font-semibold mb-1">Passing Marks<span class="text-red-500">*</span></label>
+          <input 
+            type="number" 
+            name="passingMarks" 
+            class="w-full border rounded-lg px-3 py-2"
+            required 
+          />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-semibold mb-1">Duration (Minutes)<span class="text-red-500">*</span></label>
+        <input 
+          type="number" 
+          name="durationMinutes" 
+          class="w-full border rounded-lg px-3 py-2"
+          required 
+        />
+      </div>
+
+      <!-- Button Right on Large, Center on Mobile -->
+      <div class="flex justify-center sm:justify-end">
+        <button 
+          type="submit" 
+          class="bg-blue-600 text-white w-full sm:w-auto px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          Create Test
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

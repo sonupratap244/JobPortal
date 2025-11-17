@@ -1,0 +1,32 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="flex">
+  <div class="w-64"></div>
+  <main class="flex-1 p-6 max-w-4xl mx-auto bg-white rounded shadow">
+    <h1 class="text-3xl mb-6"><%= test.title %></h1>
+    <p class="mb-6"><%= test.description %></p>
+
+    <form action="/tests/submit/<%= test.id %>" method="POST">
+      <% test.questions.forEach((q, idx) => { %>
+        <div class="mb-8">
+          <p class="font-semibold"><%= idx + 1 %>. <%= q.text %> (<%= q.marks %> marks)</p>
+
+          <% if (q.type === 'text') { %>
+            <textarea name="answers[<%= q.id %>]" rows="2" class="border p-2 rounded w-full mt-2"></textarea>
+          <% } else { %>
+            <% q.options.forEach(opt => { %>
+              <label class="block ml-6 mt-2">
+                <input type="<%= q.type === 'mcq' ? 'checkbox' : 'radio' %>" name="answers[<%= q.id %>]" value="<%= opt.id %>" class="mr-2" />
+                <%= opt.text %>
+              </label>
+            <% }); %>
+          <% } %>
+
+        </div>
+      <% }) %>
+
+      <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">Submit Test</button>
+    </form>
+  </main>
+</div>

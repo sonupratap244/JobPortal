@@ -1,0 +1,14 @@
+<%- include('../partials/header') %>
+<h1>Assignment Details</h1>
+
+<p><strong>Title:</strong> <%= assignment.title %></p>
+<p><strong>Description:</strong> <%= assignment.description || '-' %></p>
+<p><strong>Code:</strong> <%= assignment.code || '-' %></p>
+<p><strong>Test:</strong> <%= assignment.test ? assignment.test.title : 'N/A' %></p>
+<p><strong>Duration:</strong> <%= assignment.duration ? assignment.duration + ' minutes' : '-' %></p>
+<p><strong>Passing Marks:</strong> <%= assignment.passingMarks || '-' %></p>
+
+<a href="/assignments/edit/<%= assignment.id %>" class="btn btn-warning">Edit</a>
+<a href="/assignments" class="btn btn-secondary">Back to List</a>
+
+<%- include('../partials/footer') %>

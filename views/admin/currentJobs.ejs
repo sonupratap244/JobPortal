@@ -1,0 +1,25 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="ml-64 p-8 bg-gray-100 min-h-screen">
+  <h1 class="text-3xl font-bold mb-6 text-gray-700">Current Jobs</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% if (jobs.length === 0) { %>
+      <p class="text-gray-600 col-span-full">No jobs created yet.</p>
+    <% } else { %>
+      <% jobs.forEach(job => { %>
+        <div class="bg-white p-4 rounded shadow-md">
+          <h2 class="font-semibold text-lg"><%= job.title %></h2>
+          <p><strong>Experience:</strong> <%= job.experienceLevel %></p>
+          <p><strong>Location:</strong> <%= job.location %></p>
+          <p><strong>CTC:</strong> <%= job.ctc %></p>
+          <p><strong>Status:</strong> <%= job.status %></p>
+          <p class="text-gray-500 text-sm mt-1"><%= job.description %></p>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

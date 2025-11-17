@@ -1,0 +1,125 @@
+{
+  "testId": "20",
+  "parsedRows": [
+    {
+      "rowNumber": 2,
+      "raw": {
+        "Question Text": "What is the purpose of a Test Case?",
+        "Option A": "To break the system",
+        "Option B": "To verify functionality",
+        "Option C": "To deploy code",
+        "Option D": "To write code",
+        "Correct Answer": "B",
+        "Marks": 1,
+        "Time": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "What is the purpose of a Test Case?",
+        "optionA": "To break the system",
+        "optionB": "To verify functionality",
+        "optionC": "To deploy code",
+        "optionD": "To write code",
+        "correct": "B",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 3,
+      "raw": {
+        "Question Text": "Which testing is performed by end users?",
+        "Option A": "Alpha Testing",
+        "Option B": "Beta Testing",
+        "Option C": "Unit Testing",
+        "Option D": "Smoke Testing",
+        "Correct Answer": "B",
+        "Marks": 1,
+        "Time": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "Which testing is performed by end users?",
+        "optionA": "Alpha Testing",
+        "optionB": "Beta Testing",
+        "optionC": "Unit Testing",
+        "optionD": "Smoke Testing",
+        "correct": "B",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 4,
+      "raw": {
+        "Question Text": "Which testing checks individual components?",
+        "Option A": "Unit Testing",
+        "Option B": "System Testing",
+        "Option C": "Load Testing",
+        "Option D": "Regression Testing",
+        "Correct Answer": "A",
+        "Marks": 1,
+        "Time": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "Which testing checks individual components?",
+        "optionA": "Unit Testing",
+        "optionB": "System Testing",
+        "optionC": "Load Testing",
+        "optionD": "Regression Testing",
+        "correct": "A",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 5,
+      "raw": {
+        "Question Text": "Which document contains test scenarios?",
+        "Option A": "Test Plan",
+        "Option B": "Test Case",
+        "Option C": "Test Data",
+        "Option D": "Test Closure Report",
+        "Correct Answer": "B",
+        "Marks": 1,
+        "Time": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "Which document contains test scenarios?",
+        "optionA": "Test Plan",
+        "optionB": "Test Case",
+        "optionC": "Test Data",
+        "optionD": "Test Closure Report",
+        "correct": "B",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 6,
+      "raw": {
+        "Question Text": "Which testing focuses on user-friendliness?",
+        "Option A": "Performance Testing",
+        "Option B": "Usability Testing",
+        "Option C": "Load Testing",
+        "Option D": "Security Testing",
+        "Correct Answer": "B",
+        "Marks": 1,
+        "Time": 30
+      },
+      "errors": [],
+      "data": {
+        "text": "Which testing focuses on user-friendliness?",
+        "optionA": "Performance Testing",
+        "optionB": "Usability Testing",
+        "optionC": "Load Testing",
+        "optionD": "Security Testing",
+        "correct": "B",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    }
+  ]
+}

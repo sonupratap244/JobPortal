@@ -1,0 +1,396 @@
+<%- include('../partials/header') %>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous"/>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+  /* Bigger, cleaner exam UI */
+  .exam-wrap { max-width: 1200px; margin: 30px auto; }
+  .exam-header { padding: 28px; border-radius: 18px; }
+  .question-card { min-height: 240px; padding: 28px; border-radius: 18px; position: relative; overflow: hidden; }
+
+  /*  UPDATED WATERMARK (dense, repeated) */
+  .watermark {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    font-size: 10px;
+    font-weight: 600;
+    opacity: 0.1;
+    color: rgba(0, 0, 0, 0.15);
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.05) 0,
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 40px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.05) 0,
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 1px,
+      transparent 40px
+    );
+  }
+  .watermark::before {
+    content: "<%= user.name %> — <%= user.companyName ? user.companyName : 'Alobha Tech' %> ";
+    font-size: 10px;
+    opacity: 0.15;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+    overflow: hidden;
+    white-space: pre-wrap;
+    text-align: center;
+    line-height: 1.2;
+    word-spacing: 20px;
+    letter-spacing: 2px;
+  }
+
+  .question-body { position:relative; z-index:2; }
+  .tracker-dot { width:44px; height:44px; border-radius:999px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .btn-lg { padding:10px 18px; border-radius:999px; }
+  .fullscreen-hint { font-size:13px; color:#555; }
+
+  @media (max-width: 1024px) {
+    .watermark { font-size: 8px; opacity: 0.06; }
+  }
+</style>
+
+<div class="exam-wrap">
+  <!-- HEADER -->
+<div class="exam-header bg-gradient-to-r from-indigo-50 to-white shadow-lg p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-6">
+
+  <!-- Left: Logo + Test Info -->
+  <div class="flex items-start md:items-center gap-3 md:gap-4 w-full md:w-auto">
+    <img src="https://alobhahrms.com/storage/uploads/logo/logo-dark.png" alt="logo" class="h-12 md:h-14 rounded-md flex-shrink-0">
+    <div class="flex-1">
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-indigo-700 leading-tight"><%= test.title %></h1>
+      <p class="text-gray-600 text-sm sm:text-base mt-1"><%= test.description %></p>
+      <p class="text-sm sm:text-base text-gray-700 mt-2">Candidate: <strong class="text-indigo-600"><%= user.name %></strong></p>
+    </div>
+  </div>
+
+  <!-- Right: Stats -->
+  <div class="w-full md:w-auto flex flex-col md:items-end gap-1 text-sm sm:text-base text-gray-600 mt-3 md:mt-0">
+    <div>Attempted: <span id="attemptedCount" class="font-semibold text-indigo-600">0</span> / <%= test.Questions.length %></div>
+    <div class="mt-1">Time Remaining: <span id="testTimer" class="text-red-600 font-bold">00:00</span></div>
+    <div class="mt-2 text-xs sm:text-sm text-gray-500">Click <strong>Start Test</strong> to begin and enter fullscreen</div>
+  </div>
+
+</div>
+
+
+  <!-- START overlay -->
+  <div id="startOverlay" class="bg-white shadow-lg rounded-2xl p-8 mt-6 flex items-center justify-between">
+    <div>
+      <p class="text-lg font-semibold">Ready to begin?</p>
+      <p class="text-gray-600 mt-2">Click <strong>Start Test</strong> to enter full-screen mode and begin the exam. Switching tabs will trigger warnings; after 3 switches the test is auto-submitted.</p>
+    </div>
+    <div class="flex gap-3 items-center">
+      <button id="startBtn" class="bg-indigo-600 text-white btn-lg hover:bg-indigo-700 transition flex items-center gap-2">
+        <i class="fa-solid fa-play"></i> Start Test
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+
+     <!-- TRACKER -->
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+
+      <div class="mt-6 text-sm text-gray-600">
+        <p><strong>Rules:</strong></p>
+        <ul class="list-disc ml-5 mt-2 space-y-1">
+          <li>Click <strong>Start Test</strong> to enter fullscreen and begin.</li>
+          <li>Switching tabs will show warnings — 3 switches = auto-submit.</li>
+          <li>All answers are auto-saved to your browser.</li>
+        </ul>
+      </div>
+
+
+      <h3 class="text-lg font-bold text-indigo-700 mb-4">Question Tracker</h3>
+      <div id="trackerContainer" class="grid grid-cols-5 gap-3">
+        <% test.Questions.forEach((q,i) => { %>
+          <div id="tracker_<%= i %>" class="tracker-dot bg-red-500 text-white font-semibold" title="Jump to question <%= i+1 %>" onclick="jumpToQuestion(<%= i %>)"><%= i+1 %></div>
+        <% }) %>
+      </div>
+      
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="lg:col-span-2 bg-white rounded-2xl shadow-lg p-8">
+      <form id="testForm" action="/candidate/test/submit" method="POST" class="space-y-8">
+        <input type="hidden" name="testId" value="<%= test.id %>">
+        <input type="hidden" name="candidateName" value="<%= user.name %>">
+
+        <% test.Questions.forEach((q, i) => { %>
+          <div id="q_<%= i %>" class="question-card question hidden bg-indigo-50 border border-indigo-100" data-timelimit="<%= q.timeLimit || 60 %>" data-qindex="<%= i %>" data-qid="<%= q.id %>" data-type="<%= q.type %>">
+            <div class="watermark"></div>
+            <div class="question-body">
+              <div class="flex justify-between items-start mb-6">
+                <div>
+                  <div class="text-lg font-semibold text-gray-800"><%= i+1 %>. <%= q.text %> <span class="text-sm text-gray-500">(<%= q.marks %> marks)</span></div>
+                  <div class="text-xs text-gray-500 mt-1">Question time: <span class="question-timer">--:--</span></div>
+                </div>
+              </div>
+
+              <% if (q.type === 'Subjective') { %>
+                <textarea name="question_<%= q.id %>" rows="6" class="w-full border p-3 rounded-lg subjective-answer" placeholder="Write your answer here..."></textarea>
+              <% } else { %>
+                <div class="space-y-3">
+                  <% for (const key in q.options) { %>
+                    <label class="block cursor-pointer rounded p-2 hover:bg-white/60 transition border border-transparent">
+                      <input type="radio" name="question_<%= q.id %>" value="<%= key %>" class="mr-3 question-option"> 
+                      <span class="font-medium"><%= key %>)</span> <%= q.options[key] %>
+                    </label>
+                  <% } %>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+
+        <!-- NAVIGATION -->
+        <div class="flex justify-between items-center mt-6">
+          <button type="button" id="prevBtn" class="btn-lg bg-gray-200 hover:bg-gray-300 px-5" disabled><i class="fa-solid fa-chevron-left"></i> Previous</button>
+          <div class="flex gap-3 items-center">
+            <button type="button" id="nextBtn" class="btn-lg bg-indigo-600 text-white hover:bg-indigo-700 px-5">Next <i class="fa-solid fa-chevron-right ml-2"></i></button>
+            <button type="submit" id="finishBtn" class="btn-lg bg-green-600 text-white hover:bg-green-700 px-5 hidden">Finish Test</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+   
+
+  </div>
+</div>
+
+<script>
+  const questions = Array.from(document.querySelectorAll('.question'));
+  const totalQ = questions.length;
+  let currentIndex = 0;
+  let qTimer = null;
+  let overallTimer = null;
+  let overallSeconds = parseInt(<%= test.durationMinutes %>) * 60;
+  let tabSwitchCount = 0;
+  const attemptedCountEl = document.getElementById('attemptedCount');
+  const startBtn = document.getElementById('startBtn');
+  const startOverlay = document.getElementById('startOverlay');
+  let autoSubmitTriggered = false;
+  let testStarted = false;
+
+  async function enterFullscreen() {
+    try {
+      if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+    } catch (e) { console.warn('Fullscreen request failed:', e); }
+  }
+
+  async function startTestFlow(isPreview = false) {
+    startOverlay.style.display = 'none';
+    testStarted = true;
+    if (!isPreview) await enterFullscreen();
+    startOverallTimer();
+    showQuestion(0);
+    attachInputListeners();
+  }
+
+  startBtn.addEventListener('click', () => startTestFlow(false));
+
+  function showQuestion(idx) {
+    if (idx < 0) idx = 0;
+    if (idx >= totalQ) idx = totalQ - 1;
+    questions.forEach(q => q.classList.add('hidden'));
+    questions[idx].classList.remove('hidden');
+    currentIndex = idx;
+    startQuestionTimerFor(idx);
+    updateNavButtons();
+    updateTrackerHighlight();
+    updateAttemptStateAll();
+  }
+
+  function nextQuestion() { if (currentIndex < totalQ - 1) showQuestion(currentIndex + 1); }
+  function prevQuestion() { if (currentIndex > 0) showQuestion(currentIndex - 1); }
+  document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+  document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+
+  function updateNavButtons() {
+    document.getElementById('prevBtn').disabled = currentIndex === 0;
+    document.getElementById('nextBtn').classList.toggle('hidden', currentIndex === totalQ - 1);
+    document.getElementById('finishBtn').classList.toggle('hidden', currentIndex !== totalQ - 1);
+  }
+
+  function jumpToQuestion(i) { showQuestion(i); }
+  function updateTrackerHighlight() {
+    for (let i = 0; i < totalQ; i++) {
+      const el = document.getElementById(`tracker_${i}`);
+      el.classList.toggle('ring-4', i === currentIndex);
+    }
+  }
+
+  function startQuestionTimerFor(idx) {
+    if (qTimer) clearInterval(qTimer);
+    const qEl = questions[idx];
+    const timeElem = qEl.querySelector('.question-timer');
+    let remaining = parseInt(qEl.dataset.timelimit) || 60;
+    timeElem.textContent = formatTime(remaining);
+    qTimer = setInterval(() => {
+      remaining--;
+      timeElem.textContent = formatTime(remaining);
+      if (remaining <= 0) {
+        clearInterval(qTimer);
+        if (idx < totalQ - 1) showQuestion(idx + 1);
+        else triggerFinish();
+      }
+    }, 1000);
+  }
+
+  /* 🔹 UPDATED: Overall timer with persistence */
+  function startOverallTimer() {
+    const savedTime = localStorage.getItem('remainingTime');
+    if (savedTime && !isNaN(savedTime)) overallSeconds = parseInt(savedTime);
+
+    if (overallTimer) clearInterval(overallTimer);
+    updateOverallUI();
+    overallTimer = setInterval(() => {
+      overallSeconds--;
+      updateOverallUI();
+      localStorage.setItem('remainingTime', overallSeconds);
+      if (overallSeconds <= 0) {
+        clearInterval(overallTimer);
+        localStorage.removeItem('remainingTime');
+        triggerFinish();
+      }
+    }, 1000);
+  }
+
+  function updateOverallUI() {
+    const m = Math.floor(overallSeconds / 60);
+    const s = overallSeconds % 60;
+    document.getElementById('testTimer').textContent = `${m}:${String(s).padStart(2,'0')}`;
+  }
+
+  function formatTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${String(s).padStart(2,'0')}`;
+  }
+
+  function attachInputListeners() {
+    document.querySelectorAll('input[type=radio], textarea').forEach(el => {
+      if (el._hasListener) return;
+      el._hasListener = true;
+      el.addEventListener('change', saveProgress);
+      el.addEventListener('input', saveProgress);
+    });
+  }
+
+  function saveProgress() {
+    const map = {};
+    document.querySelectorAll('input[type=radio]:checked, textarea').forEach(el => {
+      map[el.name] = el.value;
+    });
+    localStorage.setItem('testProgress', JSON.stringify(map));
+    updateAttemptStateAll();
+  }
+
+  function restoreProgress() {
+    const saved = JSON.parse(localStorage.getItem('testProgress') || '{}');
+    Object.keys(saved).forEach(name => {
+      const els = document.getElementsByName(name);
+      if (!els || els.length === 0) return;
+      if (els[0].type === 'radio') els.forEach(r => { if (r.value === saved[name]) r.checked = true; });
+      else els[0].value = saved[name];
+    });
+    updateAttemptStateAll();
+  }
+
+  function updateAttemptStateAll() {
+    let answeredCount = 0;
+    questions.forEach((q, i) => {
+      let answered = false;
+      if (q.dataset.type === 'Subjective') {
+        const ta = q.querySelector('textarea');
+        answered = ta && ta.value.trim().length > 0;
+      } else {
+        answered = !!q.querySelector('input[type=radio]:checked');
+      }
+      const tracker = document.getElementById(`tracker_${i}`);
+      tracker.classList.toggle('bg-green-500', answered);
+      tracker.classList.toggle('bg-red-500', !answered);
+      if (answered) answeredCount++;
+    });
+    attemptedCountEl.textContent = answeredCount;
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!testStarted) return;
+    if (document.hidden) {
+      tabSwitchCount++;
+      if (tabSwitchCount === 1) {
+        Swal.fire({ icon: 'warning', title: 'Warning 1', text: 'Do not switch tabs during the test.' });
+      } else if (tabSwitchCount === 2) {
+        Swal.fire({ icon: 'warning', title: 'Warning 2', text: 'One more tab switch will submit the test automatically.' });
+      } else if (tabSwitchCount >= 3) {
+        autoSubmitTriggered = true;
+        Swal.fire({
+          icon: 'error', title: 'Auto-submitting test', text: 'You switched tabs too many times. Your answers will be submitted.', showConfirmButton: false, timer: 2000
+        }).then(() => triggerFinish(true));
+      }
+    }
+  });
+
+  function triggerFinish(auto = false) {
+    if (qTimer) clearInterval(qTimer);
+    if (overallTimer) clearInterval(overallTimer);
+    localStorage.removeItem('remainingTime'); // 🧹 clear saved timer
+    saveProgress();
+    if (auto) {
+      autoSubmitTriggered = true;
+      setTimeout(() => {
+        const form = document.getElementById('testForm');
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'autoSubmitted';
+        input.value = 'true';
+        form.appendChild(input);
+        form.submit();
+      }, 300);
+      return;
+    }
+    Swal.fire({
+      icon: 'info', title: 'Submit Test', text: 'Are you sure you want to submit your test?', showCancelButton: true,
+      confirmButtonText: 'Yes, submit', cancelButtonText: 'No, go back'
+    }).then(result => {
+      if (result.isConfirmed) {
+        const totalAnswered = document.querySelectorAll('.bg-green-500').length;
+        if (totalAnswered < totalQ) {
+          Swal.fire({ icon:'error', title:'Incomplete', text:'Please attempt all questions before submitting.' });
+          return;
+        }
+        localStorage.removeItem('testProgress');
+        document.getElementById('testForm').submit();
+      }
+    });
+  }
+
+  document.getElementById('finishBtn').addEventListener('click', () => triggerFinish(false));
+  document.getElementById('testForm').addEventListener('submit', function(e) {
+    if (autoSubmitTriggered) return true;
+    e.preventDefault();
+    triggerFinish(false);
+  });
+
+  restoreProgress();
+  window.jumpToQuestion = jumpToQuestion;
+</script>
+
+<%- include('../partials/footer') %>

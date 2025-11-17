@@ -1,0 +1,101 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar') %>
+
+<!-- ✅ Mobile Header (shows on small screens only) -->
+<div class="md:hidden fixed top-0 left-0 w-full bg-white shadow z-40 flex justify-between items-center px-4 py-3">
+  <button id="sidebarToggle" class="text-indigo-600 text-2xl focus:outline-none">
+    <i class="fas fa-bars"></i>
+  </button>
+  <h1 class="text-lg font-bold text-indigo-700">My Profile</h1>
+  <div></div>
+</div>
+
+<!-- ✅ Main Profile Content -->
+<div id="mainContent" class="min-h-screen bg-gray-50 p-6 md:p-8 md:ml-64 pt-20 md:pt-8 transition-all duration-300">
+  <div class="bg-white shadow-md rounded-xl p-6 sm:p-8 max-w-4xl mx-auto">
+
+    <!-- Profile Header -->
+    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 mb-8 text-center sm:text-left">
+      <div class="relative">
+        <img 
+          id="profilePhoto"
+          src="<%= user.photo ? '/uploads/' + user.photo : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' %>"
+          alt="Profile Photo"
+          class="w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-full border-4 border-indigo-200 cursor-pointer hover:opacity-80 transition"
+        >
+      </div>
+
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-bold text-indigo-700"><%= user.name %></h1>
+        <p class="text-gray-500"><%= user.email %></p>
+        <p class="text-gray-500"><%= user.phone ? user.phone : 'Phone not added' %></p>
+      </div>
+
+      <div class="sm:ml-auto mt-4 sm:mt-0">
+        <a href="/profile/edit" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition text-sm sm:text-base">
+          <i class="fas fa-edit mr-1"></i> Edit Profile
+        </a>
+      </div>
+    </div>
+
+    <hr class="mb-6">
+
+    <!-- Profile Details -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-700">
+      <div>
+        <p class="font-semibold">Email:</p>
+        <p><%= user.email %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Phone:</p>
+        <p><%= user.phone ? user.phone : 'Not provided' %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Member Since:</p>
+        <p><%= user.createdAt.toDateString() %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Company:</p>
+        <p>Alobha Technology Pvt. Ltd.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🔍 Profile Photo Modal -->
+<div id="photoModal" class="fixed inset-0 bg-black bg-opacity-70 hidden justify-center items-center z-50">
+  <div class="relative">
+    <img id="photoModalImg" src="" class="max-h-[80vh] max-w-[90vw] rounded-lg shadow-2xl">
+    <button id="closeModal" class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full w-8 h-8 text-lg font-bold hover:bg-red-700">×</button>
+  </div>
+</div>
+
+<script>
+  // === Profile Photo Modal ===
+  const profilePhoto = document.getElementById('profilePhoto');
+  const photoModal = document.getElementById('photoModal');
+  const photoModalImg = document.getElementById('photoModalImg');
+  const closeModal = document.getElementById('closeModal');
+
+  profilePhoto.addEventListener('click', () => {
+    photoModalImg.src = profilePhoto.src;
+    photoModal.classList.remove('hidden');
+    photoModal.classList.add('flex');
+  });
+
+  closeModal.addEventListener('click', () => photoModal.classList.add('hidden'));
+  photoModal.addEventListener('click', e => {
+    if (e.target === photoModal) photoModal.classList.add('hidden');
+  });
+
+  // === Sidebar Toggle (Mobile) ===
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const sidebarEl = document.getElementById('sidebar');
+  const mainContent = document.getElementById('mainContent');
+
+  sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('-translate-x-full');
+  });
+</script>
+
+<%- include('partials/footer') %>

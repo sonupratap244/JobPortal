@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+<h1>Edit Assignment</h1>
+
+<form action="/assignments/edit/<%= assignment.id %>" method="POST" class="space-y-4 max-w-lg">
+  <div>
+    <label>Title</label>
+    <input type="text" name="title" value="<%= assignment.title %>" required class="form-control" />
+  </div>
+
+  <div>
+    <label>Description</label>
+    <textarea name="description" class="form-control"><%= assignment.description %></textarea>
+  </div>
+
+  <div>
+    <label>Code (unique)</label>
+    <input type="text" name="code" value="<%= assignment.code %>" class="form-control" />
+  </div>
+
+  <div>
+    <label>Select Test</label>
+    <select name="testId" required class="form-control">
+      <option value="">Select Test</option>
+      <% tests.forEach(test => { %>
+        <option value="<%= test.id %>" <%= assignment.testId === test.id ? 'selected' : '' %>><%= test.title %></option>
+      <% }) %>
+    </select>
+  </div>
+
+  <div>
+    <label>Duration (minutes)</label>
+    <input type="number" name="duration" value="<%= assignment.duration %>" class="form-control" min="1" />
+  </div>
+
+  <div>
+    <label>Passing Marks</label>
+    <input type="number" name="passingMarks" value="<%= assignment.passingMarks %>" class="form-control" min="0" />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Update Assignment</button>
+</form>
+<%- include('../partials/footer') %>

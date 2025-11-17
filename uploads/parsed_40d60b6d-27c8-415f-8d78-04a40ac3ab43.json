@@ -1,0 +1,160 @@
+{
+  "testId": "20",
+  "parsedRows": [
+    {
+      "rowNumber": 2,
+      "raw": {
+        "Question": "What does QA stand for?",
+        "OptionA": "Quality Analysis",
+        "OptionB": "Quick Access",
+        "OptionC": "Quality Assurance",
+        "OptionD": "Query Alignment",
+        "CorrectAnswer": "C",
+        "Marks": 1,
+        "TimeLimit": 30
+      },
+      "errors": [
+        "Option A missing",
+        "Option B missing",
+        "Option C missing",
+        "Option D missing",
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "What does QA stand for?",
+        "optionA": "",
+        "optionB": "",
+        "optionC": "",
+        "optionD": "",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 3,
+      "raw": {
+        "Question": "Which testing is performed without executing code?",
+        "OptionA": "Unit Testing",
+        "OptionB": "Static Testing",
+        "OptionC": "System Testing",
+        "OptionD": "Smoke Testing",
+        "CorrectAnswer": "B",
+        "Marks": 1,
+        "TimeLimit": 30
+      },
+      "errors": [
+        "Option A missing",
+        "Option B missing",
+        "Option C missing",
+        "Option D missing",
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "Which testing is performed without executing code?",
+        "optionA": "",
+        "optionB": "",
+        "optionC": "",
+        "optionD": "",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 4,
+      "raw": {
+        "Question": "Which tool is commonly used for bug tracking?",
+        "OptionA": "Jenkins",
+        "OptionB": "Jira",
+        "OptionC": "Postman",
+        "OptionD": "Git",
+        "CorrectAnswer": "B",
+        "Marks": 1,
+        "TimeLimit": 30
+      },
+      "errors": [
+        "Option A missing",
+        "Option B missing",
+        "Option C missing",
+        "Option D missing",
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "Which tool is commonly used for bug tracking?",
+        "optionA": "",
+        "optionB": "",
+        "optionC": "",
+        "optionD": "",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 5,
+      "raw": {
+        "Question": "Which testing ensures new code doesn't break old code?",
+        "OptionA": "Smoke Testing",
+        "OptionB": "Load Testing",
+        "OptionC": "Regression Testing",
+        "OptionD": "Alpha Testing",
+        "CorrectAnswer": "C",
+        "Marks": 1,
+        "TimeLimit": 30
+      },
+      "errors": [
+        "Option A missing",
+        "Option B missing",
+        "Option C missing",
+        "Option D missing",
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "Which testing ensures new code doesn't break old code?",
+        "optionA": "",
+        "optionB": "",
+        "optionC": "",
+        "optionD": "",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    },
+    {
+      "rowNumber": 6,
+      "raw": {
+        "Question": "What is the first phase of STLC?",
+        "OptionA": "Test Planning",
+        "OptionB": "Test Execution",
+        "OptionC": "Requirement Analysis",
+        "OptionD": "Test Closure",
+        "CorrectAnswer": "C",
+        "Marks": 1,
+        "TimeLimit": 30
+      },
+      "errors": [
+        "Option A missing",
+        "Option B missing",
+        "Option C missing",
+        "Option D missing",
+        "Correct Answer must be A/B/C/D",
+        "Time Limit must be a positive number (seconds)"
+      ],
+      "data": {
+        "text": "What is the first phase of STLC?",
+        "optionA": "",
+        "optionB": "",
+        "optionC": "",
+        "optionD": "",
+        "correct": "",
+        "marks": 1,
+        "timeLimit": 30
+      }
+    }
+  ]
+}

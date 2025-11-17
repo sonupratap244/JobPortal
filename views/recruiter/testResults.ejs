@@ -1,0 +1,265 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar', { user }) %>
+
+<!-- Toast message (for success) -->
+<% if (typeof success !== 'undefined' && success === '1') { %>
+  <div id="toast"
+       class="fixed top-6 right-6 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg transition-all duration-700 z-50">
+      Subjective marks updated successfully!
+  </div>
+
+  <script>
+    setTimeout(() => {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 1000);
+      }
+    }, 3000);
+  </script>
+<% } %>
+
+<!-- MAIN WRAPPER -->
+<div class="p-4 sm:p-6 lg:p-8 lg:ml-64 bg-gray-50 min-h-screen transition-all duration-300">
+
+  <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow p-6 sm:p-8">
+
+    <h2 class="text-xl sm:text-2xl font-bold text-blue-700 mb-4">
+      Results for: <%= test.title %>
+    </h2>
+    <p class="text-gray-600 mb-6"><%= test.description %></p>
+
+    <% if (results.length > 0) { %>
+    <div class="overflow-x-auto">
+    <table class="w-full border-collapse text-sm">
+      <thead>
+        <tr class="bg-gray-200 text-center text-xs sm:text-sm">
+          <th class="border px-3 py-2">S.N.</th>
+          <th class="border px-3 py-2">Candidate</th>
+          <th class="border px-3 py-2">Marks</th>
+          <th class="border px-3 py-2">Status</th>
+          <th class="border px-3 py-2">Review</th>
+          <th class="border px-3 py-2">Attempt Date</th>
+          <th class="border px-3 py-2">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% results.forEach((r, i) => { %>
+        <tr class="text-center bg-white hover:bg-gray-50">
+          <td class="border px-3 py-2"><%= i + 1 %></td>
+          <td class="border px-3 py-2 font-semibold"><%= r.candidateName %></td>
+          <td class="border px-3 py-2"><%= r.obtainedMarks %> / <%= r.totalMarks %></td>
+          <td class="border px-3 py-2 <%= r.status === 'Pass' ? 'text-green-600' : 'text-red-600' %>">
+            <%= r.status %>
+          </td>
+          <td class="border px-3 py-2">
+            <% if (r.reviewStatus === 'Pending') { %>
+              <span class="text-yellow-600 font-semibold">Pending</span>
+            <% } else { %>
+              <span class="text-green-600 font-semibold">Reviewed</span>
+            <% } %>
+          </td>
+          <td class="border px-3 py-2"><%= new Date(r.createdAt).toLocaleString() %></td>
+
+          <td class="border px-3 py-2 space-x-2">
+            <button
+              type="button"
+              class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+              onclick="toggleDetails(<%= i %>)">
+              View Answers
+            </button>
+
+            <!-- Delete Result -->
+            <form action="/recruiter/results/<%= r.id %>/delete"
+                  method="POST"
+                  class="inline"
+                  onsubmit="return confirm('Are you sure you want to delete this result?');">
+              <button
+                type="submit"
+                class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+
+        <!-- EXPANDED DETAILS -->
+        <tr id="details-<%= i %>" class="hidden bg-gray-50">
+          <td colspan="7" class="border px-4 sm:px-6 py-4 text-left">
+
+            <h3 class="text-lg font-semibold mb-3 text-blue-700">
+              Answer Details for <%= r.candidateName %>
+            </h3>
+
+            <% if (r.answers && r.answers.length > 0) { %>
+            <form action="/recruiter/results/<%= r.id %>/mark" method="POST" class="space-y-4">
+
+              <div class="overflow-x-auto">
+              <table class="w-full border border-gray-300 text-xs sm:text-sm">
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="border px-2 py-1 text-center">S.N</th>
+                    <th class="border px-2 py-1 text-left">Question</th>
+                    <th class="border px-2 py-1 text-left">Candidate Answer</th>
+                    <th class="border px-2 py-1 text-left">Correct Answer</th>
+                    <th class="border px-2 py-1 text-center">Mark / Total</th>
+                    <th class="border px-2 py-1 text-center">Result</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% let hasSubjective = false; %>
+                  <% r.answers.forEach((a, qIndex) => { %>
+                  <tr>
+                    <td class="border px-2 py-1 text-center"><%= qIndex + 1 %></td>
+
+                    <td class="border px-2 py-1"><%= a.question %></td>
+
+                    <!-- CANDIDATE ANSWER WITH POPUP -->
+                    <td class="border px-2 py-1">
+                      <% if (a.questionType === 'Subjective') { %>
+                        <span class="text-purple-600 underline cursor-pointer"
+                              onclick='showSubjectivePopup(<%- JSON.stringify(a) %>)'>
+                              <%= a.givenAnswer %>
+                        </span>
+                      <% } else { %>
+                        <span class="text-blue-600 underline cursor-pointer"
+                              onclick='showObjectivePopup(<%- JSON.stringify(a) %>)'>
+                              <%= a.givenAnswer %>
+                        </span>
+                      <% } %>
+                    </td>
+
+                    <td class="border px-2 py-1"><%= a.correctAnswer %></td>
+
+                    <td class="border px-2 py-1 text-center">
+
+                      <% if (a.questionType === 'Subjective') { %>
+                        <% hasSubjective = true; %>
+                        <input
+                          type="number"
+                          name="marks_<%= a.id %>"
+                          min="0"
+                          max="<%= a.questionMarks %>"
+                          step="0.5"
+                          value="<%= a.obtainedMarks || 0 %>"
+                          class="border rounded px-2 py-1 w-16 text-center"
+                        />
+                        <span class="text-gray-500">/ <%= a.questionMarks %></span>
+
+                      <% } else { %>
+                        <%= a.obtainedMarks %> / <%= a.questionMarks %>
+                      <% } %>
+
+                    </td>
+
+                    <td class="border px-2 py-1 text-center">
+                      <% if (a.questionType === 'Subjective') { %>
+                        <i class="fa-solid fa-hourglass-half text-yellow-500"></i>
+                      <% } else if (a.isCorrect) { %>
+                        <i class="fa-solid fa-circle-check text-green-600"></i>
+                      <% } else { %>
+                        <i class="fa-solid fa-circle-xmark text-red-600"></i>
+                      <% } %>
+                    </td>
+
+                  </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+              </div>
+
+              <% if (hasSubjective) { %>
+              <div class="mt-4 text-right">
+                <button
+                  type="submit"
+                  class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">
+                  Save Marks
+                </button>
+              </div>
+              <% } %>
+
+            </form>
+
+            <% } else { %>
+              <p class="text-gray-500 italic">No answers available.</p>
+            <% } %>
+
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    </div>
+
+    <% } else { %>
+      <p class="text-gray-500">No candidates have attempted this test yet.</p>
+    <% } %>
+
+    <div class="mt-6">
+      <a href="/recruiter/tests"
+         class="bg-gray-400 text-white px-5 py-2 rounded hover:bg-gray-500">
+        Back to Tests
+      </a>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- 🔵 MODAL POPUP (Objective + Subjective Both Use Same Modal) -->
+<div id="answerModal"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center p-4 z-50">
+
+  <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+
+    <h3 class="text-xl font-semibold mb-4 text-blue-700">Answer Details</h3>
+
+    <p class="font-semibold text-gray-700">Question:</p>
+    <p id="modalQuestion" class="mb-4 text-gray-800"></p>
+
+    <p class="font-semibold text-gray-700">Candidate Answer:</p>
+    <p id="modalGiven" class="mb-4 text-gray-800"></p>
+
+    <p class="font-semibold text-gray-700">Correct Answer:</p>
+    <p id="modalCorrect" class="mb-6 text-green-700 font-semibold"></p>
+
+    <div class="text-right">
+      <button onclick="closeModal()"
+              class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+        Close
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+  function toggleDetails(i) {
+    document.getElementById("details-" + i).classList.toggle("hidden");
+  }
+
+  function closeModal() {
+    document.getElementById("answerModal").classList.add("hidden");
+  }
+
+  // OBJECTIVE POPUP
+  function showObjectivePopup(ans) {
+    document.getElementById("modalQuestion").innerText = ans.question;
+    document.getElementById("modalGiven").innerText = ans.givenAnswer;
+    document.getElementById("modalCorrect").innerText = ans.correctAnswer;
+
+    document.getElementById("answerModal").classList.remove("hidden");
+  }
+
+  // SUBJECTIVE POPUP
+  function showSubjectivePopup(ans) {
+    document.getElementById("modalQuestion").innerText = ans.question;
+    document.getElementById("modalGiven").innerText = ans.givenAnswer;
+    document.getElementById("modalCorrect").innerText = "No fixed correct answer for subjective questions.";
+
+    document.getElementById("answerModal").classList.remove("hidden");
+  }
+</script>

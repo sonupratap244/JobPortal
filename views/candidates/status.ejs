@@ -1,0 +1,122 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<!-- ✅ Main Content -->
+<div class="md:ml-64 p-4 sm:p-6 md:p-8 bg-gradient-to-br from-gray-100 via-white to-blue-50 min-h-screen transition-all duration-300">
+  <h1 class="text-2xl sm:text-3xl font-extrabold mb-8 text-gray-800 border-b-4 border-blue-600 inline-block pb-1 tracking-wide">
+    Candidate Status
+  </h1>
+
+  <% if (candidates.length === 0) { %>
+    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow text-center text-gray-600 max-w-md mx-auto">
+      <i class="fas fa-user-times text-5xl text-gray-400 mb-3"></i>
+      <p class="text-lg font-medium">No applications found yet.</p>
+    </div>
+  <% } else { %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      <% candidates.forEach(candidate => { 
+        const result = (candidate.results && candidate.results.length > 0) ? candidate.results[0] : null;
+      %>
+        <div class="bg-white rounded-2xl shadow-lg p-6 transition-transform duration-300 transform hover:scale-[1.02] hover:shadow-2xl border-t-4
+          <%= candidate.status === 'Selected' ? 'border-green-500' : 
+              candidate.status === 'Rejected' ? 'border-red-500' : 
+              candidate.status === 'Interview' ? 'border-yellow-500' : 
+              candidate.status === 'In Review' ? 'border-blue-500' : 
+              'border-gray-400' %>">
+
+          <!-- Candidate Name -->
+          <div class="flex flex-wrap items-center justify-between mb-3">
+            <h2 class="text-base sm:text-lg font-semibold text-gray-800 flex items-center">
+              <i class="fas fa-user text-blue-500 mr-2"></i> <%= candidate.name %>
+            </h2>
+          </div>
+
+          <!-- Email -->
+          <p class="text-sm text-gray-600 mb-3 break-words">
+            <i class="far fa-envelope mr-1 text-blue-500"></i> <%= candidate.email %>
+          </p>
+
+          <!-- Job Info -->
+          <% if (candidate.job && candidate.job.title) { %>
+            <div class="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-4">
+              <p class="text-sm font-semibold text-blue-800 mb-1">
+                <i class="fas fa-briefcase mr-2"></i> Applied For:
+                <span class="font-bold text-gray-800"><%= candidate.job.title %></span>
+              </p>
+
+              <% if (candidate.job.location) { %>
+                <p class="text-xs text-gray-600 ml-6 mt-1 flex items-center">
+                  <i class="fas fa-map-marker-alt mr-1 text-red-500"></i>
+                  Location: <%= candidate.job.location %>
+                </p>
+              <% } %>
+            </div>
+          <% } else { %>
+            <p class="text-sm text-gray-500 italic mb-3">Job details not available.</p>
+          <% } %>
+
+          <!-- Status Badge -->
+          <div class="mt-2 mb-4">
+            <span class="inline-flex items-center text-xs font-semibold px-3 py-1 rounded-full shadow-sm
+              <%= candidate.status === 'Selected' ? 'bg-green-100 text-green-700' : 
+                  candidate.status === 'Rejected' ? 'bg-red-100 text-red-700' : 
+                  candidate.status === 'Interview' ? 'bg-yellow-100 text-yellow-800' : 
+                  candidate.status === 'In Review' ? 'bg-blue-100 text-blue-700' : 
+                  'bg-gray-100 text-gray-700' %>">
+              <i class="fas fa-circle mr-1 text-[8px]"></i>
+              <%= candidate.status %>
+            </span>
+          </div>
+
+          <!-- 🔹 Assessment + Result Buttons -->
+          <div class="flex flex-wrap items-center gap-3">
+
+            <% 
+              const hasResult = candidate.results && candidate.results.length > 0;
+              const resultObj = hasResult ? candidate.results[0] : null;
+            %>
+
+            <% if (!candidate.testAssigned) { %>
+              <!-- Test not assigned -->
+              <button disabled
+                class="inline-flex items-center text-sm px-4 py-2 rounded-full font-medium bg-gray-300 text-gray-600 cursor-not-allowed w-full sm:w-auto justify-center">
+                <i class="fas fa-file-alt mr-2"></i> No Test Assigned
+              </button>
+
+            <% } else if (!hasResult) { %>
+              <!-- Test assigned but not yet taken -->
+              <a href="/candidate/tests"
+                class="inline-flex items-center text-sm px-4 py-2 rounded-full font-medium bg-blue-600 text-white hover:bg-blue-700 transition w-full sm:w-auto justify-center">
+                <i class="fas fa-file-alt mr-2"></i> Take Assessment
+              </a>
+
+            <% } else if (resultObj.reviewStatus === 'Pending') { %>
+              <!-- Test given but result under review -->
+              <button disabled
+                class="inline-flex items-center bg-yellow-300 text-yellow-800 text-sm px-4 py-2 rounded-full font-medium cursor-not-allowed w-full sm:w-auto justify-center">
+                <i class="fas fa-hourglass-half mr-2"></i> Under Review
+              </button>
+
+            <% } else if (resultObj.reviewStatus === 'Reviewed') { %>
+              <!-- Result reviewed -->
+              <a href="/candidate/results/<%= resultObj.id %>" 
+                class="inline-flex items-center bg-green-600 text-white text-sm px-4 py-2 rounded-full font-medium hover:bg-green-700 transition w-full sm:w-auto justify-center">
+                <i class="fas fa-eye mr-2"></i> View Result
+              </a>
+
+            <% } else { %>
+              <!-- Fallback -->
+              <button disabled
+                class="inline-flex items-center bg-gray-300 text-gray-600 text-sm px-4 py-2 rounded-full font-medium cursor-not-allowed w-full sm:w-auto justify-center">
+                <i class="fas fa-eye mr-2"></i> Result Unavailable
+              </button>
+            <% } %>
+          </div>
+
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/heroicons@1.0.6/dist/heroicons.min.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</head>
+
+<body class="bg-gray-100 flex">
+
+  <!-- Sidebar -->
+  <%- include('partials/sidebar', { user }) %>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col min-h-screen md:ml-64">
+
+    <!-- Header -->
+    <%- include('partials/header') %>
+
+    <!-- Dashboard Content -->
+    <main class="p-4 md:p-8 flex-1 bg-gray-100">
+      <h1 class="text-2xl md:text-3xl font-bold mb-6 md:mb-8">Admin Dashboard</h1>
+
+     <!-- Metrics Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
+
+  <!-- Total Candidates -->
+  <div class="bg-white p-5 md:p-6 rounded-lg shadow-md hover:shadow-xl transition">
+    <div class="flex items-center space-x-3 mb-2">
+      <ion-icon name="people-outline" class="text-blue-600 text-3xl"></ion-icon>
+      <h2 class="text-lg md:text-xl font-semibold">Total Candidates</h2>
+    </div>
+   <p class="text-2xl md:text-3xl font-bold text-blue-600 text-center w-full">
+    <%= totalCandidates %>
+  </p>
+  </div>
+
+  <!-- Freshers -->
+  <div class="bg-white p-5 md:p-6 rounded-lg shadow-md hover:shadow-xl transition">
+    <div class="flex items-center space-x-3 mb-2">
+      <ion-icon name="school-outline" class="text-green-600 text-3xl"></ion-icon>
+      <h2 class="text-lg md:text-xl font-semibold">Freshers</h2>
+    </div>
+    <p class="text-2xl md:text-3xl font-bold text-green-600 text-center w-full"><%= freshers %></p>
+  </div>
+
+  <!-- Total Jobs -->
+  <div class="bg-white p-5 md:p-6 rounded-lg shadow-md hover:shadow-xl transition">
+    <div class="flex items-center space-x-3 mb-2">
+      <ion-icon name="briefcase-outline" class="text-purple-600 text-3xl"></ion-icon>
+      <h2 class="text-lg md:text-xl font-semibold">Total Jobs</h2>
+    </div>
+    <p class="text-2xl md:text-3xl font-bold text-purple-600 text-center w-full"><%= totalJobs %></p>
+  </div>
+
+  <!-- Interviews -->
+   <div class="bg-white p-5 md:p-6 rounded-lg shadow-md hover:shadow-xl transition">
+    <div class="flex items-center space-x-3 mb-2">
+      <ion-icon name="people-outline" class="text-blue-600 text-3xl"></ion-icon>
+      <h2 class="text-lg md:text-xl font-semibold">Total Candidates</h2>
+    </div>
+    <p class="text-2xl md:text-3xl font-bold text-blue-600 text-center w-full"><%= totalCandidates %></p>
+  </div>
+
+</div>
+
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Line Chart -->
+        <div class="bg-white p-5 md:p-6 rounded-lg shadow-md">
+          <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
+            <h2 class="text-lg md:text-xl font-semibold">Candidates Time</h2>
+            <div class="flex space-x-2">
+              <button id="lineMonth" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">Month</button>
+              <button id="lineWeek" class="px-3 py-1 bg-gray-300 text-gray-700 rounded text-sm">Week</button>
+            </div>
+          </div>
+          <canvas id="lineChart"></canvas>
+        </div>
+
+        <!-- Donut Chart -->
+        <!-- Donut Chart -->
+<div class="bg-white p-5 md:p-6 rounded-lg shadow-md">
+  <div class="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
+    <h2 class="text-lg md:text-xl font-semibold">Candidate Distribution</h2>
+    <div class="flex space-x-2">
+      <button id="donutMonth" class="px-3 py-1 bg-blue-500 text-white rounded text-sm">Month</button>
+      <button id="donutWeek" class="px-3 py-1 bg-gray-300 text-gray-700 rounded text-sm">Week</button>
+    </div>
+  </div>
+  <canvas id="donutChart" class="h-64 md:h-56"></canvas> <!-- Reduced height -->
+</div>
+
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Chart.js Scripts -->
+  <script>
+    const allMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const weekDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+    const monthlyData = <%- JSON.stringify(monthlyCandidates || []) %>;
+    const weeklyData = <%- JSON.stringify(weeklyCandidates || []) %>;
+
+    const monthValues = allMonths.map((_,i)=>{
+      const found = monthlyData.find(d=>d.month-1 === i);
+      return found ? found.count : 0;
+    });
+
+    const weekValues = weekDays.map(d=>{
+      const found = weeklyData.find(w=>w.day === d);
+      return found ? w.count : 0;
+    });
+
+    const colors = [
+      '#F87171','#60A5FA','#FBBF24','#34D399','#A78BFA','#F97316',
+      '#F472B6','#3B82F6','#EAB308','#14B8A6','#C084FC','#FB923C'
+    ];
+
+    const ctxLine = document.getElementById('lineChart').getContext('2d');
+    let lineChart = new Chart(ctxLine, {
+      type: 'line',
+      data: {
+        labels: allMonths,
+        datasets: [{
+          label: 'Candidates',
+          data: monthValues,
+          backgroundColor: 'rgba(59, 130, 246, 0.2)',
+          borderColor: 'rgba(59, 130, 246, 1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: true } }, scales: { y: { beginAtZero: true } } }
+    });
+
+    const ctxDonut = document.getElementById('donutChart').getContext('2d');
+    let donutChart = new Chart(ctxDonut, {
+      type: 'doughnut',
+      data: {
+        labels: allMonths,
+        datasets: [{
+          data: monthValues,
+          backgroundColor: colors,
+          borderWidth: 1,
+          weight: 1 // thinner circle
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '70%', // reduce thickness
+        plugins: { legend: { position: 'top' } }
+      }
+    });
+
+    function updateLineChart(type){
+      if(type === 'month'){
+        lineChart.data.labels = allMonths;
+        lineChart.data.datasets[0].data = monthValues;
+        document.getElementById('lineMonth').classList.replace('bg-gray-300','bg-blue-500');
+        document.getElementById('lineMonth').classList.replace('text-gray-700','text-white');
+        document.getElementById('lineWeek').classList.replace('bg-blue-500','bg-gray-300');
+        document.getElementById('lineWeek').classList.replace('text-white','text-gray-700');
+      } else {
+        lineChart.data.labels = weekDays;
+        lineChart.data.datasets[0].data = weekValues;
+        document.getElementById('lineWeek').classList.replace('bg-gray-300','bg-blue-500');
+        document.getElementById('lineWeek').classList.replace('text-gray-700','text-white');
+        document.getElementById('lineMonth').classList.replace('bg-blue-500','bg-gray-300');
+        document.getElementById('lineMonth').classList.replace('text-white','text-gray-700');
+      }
+      lineChart.update();
+    }
+
+    function updateDonutChart(type){
+      if(type === 'month'){
+        donutChart.data.labels = allMonths;
+        donutChart.data.datasets[0].data = monthValues;
+        document.getElementById('donutMonth').classList.replace('bg-gray-300','bg-blue-500');
+        document.getElementById('donutMonth').classList.replace('text-gray-700','text-white');
+        document.getElementById('donutWeek').classList.replace('bg-blue-500','bg-gray-300');
+        document.getElementById('donutWeek').classList.replace('text-white','text-gray-700');
+      } else {
+        donutChart.data.labels = weekDays;
+        donutChart.data.datasets[0].data = weekValues;
+        document.getElementById('donutWeek').classList.replace('bg-gray-300','bg-blue-500');
+        document.getElementById('donutWeek').classList.replace('text-gray-700','text-white');
+        document.getElementById('donutMonth').classList.replace('bg-blue-500','bg-gray-300');
+        document.getElementById('donutMonth').classList.replace('text-white','text-gray-700');
+      }
+      donutChart.update();
+    }
+
+    document.getElementById('lineMonth').addEventListener('click', ()=>updateLineChart('month'));
+    document.getElementById('lineWeek').addEventListener('click', ()=>updateLineChart('week'));
+    document.getElementById('donutMonth').addEventListener('click', ()=>updateDonutChart('month'));
+    document.getElementById('donutWeek').addEventListener('click', ()=>updateDonutChart('week'));
+  </script>
+
+</body>
+</html>

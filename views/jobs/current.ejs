@@ -1,0 +1,129 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="md:ml-64 p-4 md:p-8 bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row items-center justify-between mb-8 md:mb-10 text-center md:text-left gap-4">
+      <h1 class="text-2xl md:text-4xl font-extrabold bg-gradient-to-r from-indigo-700 to-purple-700 bg-clip-text text-transparent tracking-tight">
+        Current Job Openings
+      </h1>
+      <div class="flex items-center justify-center space-x-3">
+        <img 
+          src="https://alobhahrms.com/storage/uploads/logo/logo-dark.png"
+          class="h-8 md:h-10 rounded-md shadow-sm"
+          alt="Alobh Technology Logo"
+        >
+        <span class="text-gray-700 font-semibold text-sm md:text-lg">Alobha Technology Pvt. Ltd.</span>
+      </div>
+    </div>
+
+    <% if (jobs && jobs.length > 0) { %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <% jobs.forEach(job => { %>
+          <!-- Job Card -->
+          <div class="bg-white p-6 md:p-8 rounded-3xl shadow-md border border-gray-200 hover:shadow-xl transition-all duration-300">
+            <h2 class="text-xl md:text-2xl font-bold text-indigo-700 mb-4"><%= job.title %></h2>
+
+            <div class="text-gray-600 space-y-2 mb-6 text-sm md:text-base">
+              <p><i class="fa fa-briefcase text-indigo-600 mr-2"></i><strong>Experience:</strong> <%= job.experienceLevel %></p>
+              <p><i class="fa fa-map-marker-alt text-indigo-600 mr-2"></i><strong>Location:</strong> <%= job.location %></p>
+              <p><i class="fa fa-wallet text-indigo-600 mr-2"></i><strong>CTC:</strong> ₹<%= job.ctc %> LPA</p>
+            </div>
+
+            <!-- View Description Button -->
+            <button onclick="openJobModal('<%= job.id %>')" 
+              class="w-full border border-indigo-600 text-indigo-700 hover:bg-indigo-50 px-6 py-2 rounded-full font-semibold text-sm md:text-base transition duration-200 mb-3">
+              <i class="fa fa-info-circle mr-2"></i> View Description
+            </button>
+
+            <!-- Apply Button -->
+            <% if (job.status === 'Active') { %>
+              <% if (appliedJobIds.includes(job.id)) { %>
+                <button class="w-full flex items-center justify-center bg-gray-100 text-gray-600 px-6 py-3 rounded-full font-semibold cursor-not-allowed border border-gray-300 text-sm md:text-base">
+                  <i class="fa fa-check-circle text-green-600 mr-2"></i> Already Applied
+                </button>
+              <% } else { %>
+                <a href="/candidates/create?jobId=<%= job.id %>"
+                   class="w-full inline-flex items-center justify-center bg-gradient-to-r from-indigo-600 to-purple-700 text-white px-6 py-3 rounded-full font-semibold hover:from-indigo-700 hover:to-purple-800 transition duration-300 shadow-sm text-sm md:text-base">
+                   Apply Now
+                </a>
+              <% } %>
+            <% } else { %>
+              <span class="w-full inline-block text-center bg-gray-200 text-gray-500 px-6 py-3 rounded-full font-medium text-sm md:text-base cursor-not-allowed">
+                Closed
+              </span>
+            <% } %>
+          </div>
+
+          <!-- Popup Modal -->
+          <div id="modal-<%= job.id %>" 
+               class="hidden fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-2xl shadow-xl w-full sm:w-11/12 md:w-2/3 lg:w-1/2 max-h-[85vh] overflow-y-auto p-6 md:p-8 relative">
+              
+              <!-- Close Button -->
+              <button onclick="closeJobModal('<%= job.id %>')" 
+                      class="absolute top-3 right-3 text-gray-600 hover:text-red-600">
+                <i class="fa fa-times text-2xl"></i>
+              </button>
+
+              <!-- Job Info -->
+              <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-4"><%= job.title %></h2>
+              <p class="text-gray-600 mb-3"><i class="fa fa-map-marker-alt text-indigo-600 mr-2"></i><strong>Location:</strong> <%= job.location %></p>
+              <p class="text-gray-600 mb-3"><i class="fa fa-briefcase text-indigo-600 mr-2"></i><strong>Experience:</strong> <%= job.experienceLevel %></p>
+              <p class="text-gray-600 mb-3"><i class="fa fa-wallet text-indigo-600 mr-2"></i><strong>CTC:</strong> ₹<%= job.ctc %> LPA</p>
+              
+              <hr class="my-4">
+
+              <!-- Full Description -->
+              <div class="text-gray-700 text-sm md:text-base leading-relaxed space-y-3">
+                <% if (job.description) { %>
+                  <%- job.description.replace(/\n/g, '<br>') %>
+                <% } else { %>
+                  <p>No detailed description available for this position.</p>
+                <% } %>
+              </div>
+
+              <!-- Apply / Already Applied Section -->
+              <% if (job.status === 'Active') { %>
+                <div class="mt-8 text-center">
+                  <% if (appliedJobIds.includes(job.id)) { %>
+                    <button class="bg-gray-100 text-gray-600 px-8 py-3 rounded-full font-semibold cursor-not-allowed border border-gray-300 inline-flex items-center gap-2 text-sm md:text-base">
+                      <i class="fa fa-check-circle text-green-600"></i> Already Applied
+                    </button>
+                  <% } else { %>
+                    <a href="/candidates/create?jobId=<%= job.id %>"
+                       class="bg-gradient-to-r from-indigo-600 to-purple-700 text-white px-8 py-3 rounded-full font-semibold hover:from-indigo-700 hover:to-purple-800 transition duration-300 shadow-md inline-flex items-center gap-2 text-sm md:text-base">
+                      Apply Now
+                    </a>
+                  <% } %>
+                </div>
+              <% } else { %>
+                <div class="mt-8 text-center">
+                  <span class="bg-gray-200 text-gray-500 px-8 py-3 rounded-full font-medium cursor-not-allowed inline-block text-sm md:text-base">Closed</span>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="bg-white p-8 rounded-2xl shadow text-center text-gray-500 max-w-md mx-auto">
+        <i class="fa fa-info-circle text-indigo-600 text-3xl mb-3"></i>
+        <p>No current job openings available.</p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  function openJobModal(id) {
+    document.getElementById(`modal-${id}`).classList.remove('hidden');
+  }
+  function closeJobModal(id) {
+    document.getElementById(`modal-${id}`).classList.add('hidden');
+  }
+</script>
+
+<%- include('../partials/footer') %>

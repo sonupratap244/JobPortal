@@ -1,0 +1,89 @@
+<%- include('partials/header') %>
+<%- include('partials/sidebar') %>
+
+<div class="md:ml-64 p-4 md:p-8 bg-gray-50 min-h-screen transition-all duration-300">
+  <div class="bg-white shadow-md rounded-xl p-6 md:p-8 max-w-4xl mx-auto">
+    <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-6 text-center md:text-left">
+      Edit Profile
+    </h2>
+
+    <form action="/profile/update" method="POST" enctype="multipart/form-data">
+      <!-- Profile Photo Section -->
+      <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8">
+        <div class="relative flex-shrink-0">
+          <img 
+            id="photoPreview"
+            src="<%= user.photo ? '/uploads/' + user.photo : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' %>"
+            alt="Profile Photo"
+            class="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover border-4 border-indigo-200"
+          >
+        </div>
+        <div class="w-full sm:flex-1">
+          <label class="block text-gray-700 font-medium mb-2 text-center sm:text-left">Change Photo</label>
+          <input 
+            type="file" 
+            id="photoInput" 
+            name="photo" 
+            accept="image/*" 
+            class="border border-gray-300 rounded-lg px-3 py-2 w-full bg-gray-50 cursor-pointer text-sm"
+          >
+          <p class="text-xs text-gray-500 mt-2 text-center sm:text-left">
+            Allowed formats: JPG, PNG, JPEG
+          </p>
+        </div>
+      </div>
+
+      <!-- Profile Info Fields -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Full Name</label>
+          <input type="text" name="name" value="<%= user.name %>" class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-indigo-300 outline-none transition">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Email</label>
+          <input type="email" name="email" value="<%= user.email %>" class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-indigo-300 outline-none transition">
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-gray-700 font-medium mb-2">Phone</label>
+          <input type="text" name="phone" value="<%= user.phone %>" class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:ring-2 focus:ring-indigo-300 outline-none transition">
+        </div>
+      </div>
+
+      <% if (errors.message) { %>
+        <p class="text-red-500 mt-3 text-sm text-center md:text-left"><%= errors.message %></p>
+      <% } %>
+
+      <!-- Buttons -->
+      <div class="flex flex-col sm:flex-row justify-end items-center gap-3 mt-8">
+        <button 
+          type="submit" 
+          class="w-full sm:w-auto bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition font-medium text-sm md:text-base">
+          Save Changes
+        </button>
+        <a href="/profile" 
+           class="w-full sm:w-auto bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400 transition font-medium text-sm md:text-base text-center">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Live image preview when user selects a new file
+  const photoInput = document.getElementById('photoInput');
+  const photoPreview = document.getElementById('photoPreview');
+
+  photoInput.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        photoPreview.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+
+<%- include('partials/footer') %>

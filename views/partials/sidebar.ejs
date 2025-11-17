@@ -1,0 +1,133 @@
+<!-- Sidebar Start -->
+<div class="md:flex">
+
+  <!-- Mobile Navbar -->
+<div class="fixed top-0 left-0 w-full bg-blue-200 shadow-md flex items-center justify-between px-4 py-3 md:hidden z-50">
+
+  <!-- Left: Logo -->
+  <div class="flex items-center gap-2">
+    <img src="https://alobhahrms.com/storage/uploads/logo/logo-dark.png" alt="Logo" class="h-8 w-auto rounded">
+  </div>
+
+  <!-- Center: Text -->
+  <!-- <div class="flex-1 text-center">
+    <span class="font-semibold text-blue-900 text-lg">Alobha Tech.</span>
+  </div> -->
+
+  <!-- Right: Menu Button -->
+  <button id="menu-btn" class="text-blue-800 text-2xl focus:outline-none">
+    <i class="fas fa-bars"></i>
+  </button>
+</div>
+
+
+  <!-- Overlay for mobile -->
+  <div id="overlay" class="fixed inset-0 bg-black bg-opacity-40 hidden z-40 md:hidden"></div>
+
+  <!-- Sidebar -->
+  <div id="sidebar" 
+       class="fixed left-0 top-0 w-64 h-full bg-gradient-to-b from-blue-100 to-blue-200 text-gray-800 shadow-xl flex flex-col border-r border-blue-300
+              transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-50">
+
+    <!-- Logo/Profile -->
+    <div class="flex flex-col items-center justify-center h-32 border-b border-blue-300 bg-blue-50 p-4">
+      <img src="https://alobhahrms.com/storage/uploads/logo/logo-dark.png" alt="Logo" class="h-16 w-auto mb-2 rounded-md shadow-sm">
+      
+      <% if(user){ %>
+        <a href="<%= user.role === 'admin' ? '/home' : '/auth/profile' %>" class="text-blue-700 font-semibold">
+          <i class="fas fa-user-circle"></i> <%= user.name %>
+        </a>
+        <p class="text-xs text-gray-500 mt-1 uppercase tracking-wide">
+          <%= (user.role ? user.role.toUpperCase() : 'USER') %>
+        </p>
+      <% } else { %>
+        <a href="/auth/login" class="text-blue-700 font-semibold">
+          <i class="fas fa-user-circle"></i> Guest
+        </a>
+      <% } %>
+    </div>
+
+    <!-- Menu -->
+    <ul class="mt-6 flex-1 space-y-1">
+      <% if (user && user.role === 'admin') { %>
+        <li>
+          <a href="/home" class="flex items-center gap-3 px-6 py-3 hover:bg-blue-300 hover:text-blue-900 rounded-r-full transition-all duration-200">
+            <i class="fas fa-tachometer-alt text-blue-600"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="/candidates/list" class="flex items-center gap-3 px-6 py-3 hover:bg-blue-300 hover:text-blue-900 rounded-r-full transition-all duration-200">
+            <i class="fas fa-users text-blue-600"></i> Candidate List
+          </a>
+        </li>
+        <li>
+          <a href="/jobs/list" class="flex items-center gap-3 px-6 py-3 hover:bg-blue-300 hover:text-blue-900 rounded-r-full transition-all duration-200">
+            <i class="fas fa-briefcase text-blue-600"></i> Manage Jobs
+          </a>
+        </li>
+        <li>
+          <a href="/recruiter/tests" class="flex items-center gap-3 px-6 py-3 hover:bg-blue-300 hover:text-blue-900 rounded-r-full transition-all duration-200">
+            <i class="fas fa-file-alt text-blue-600"></i> Create Assignment
+          </a>
+        </li>
+      <% } else if(user && user.role === 'user') { %>
+        <li>
+          <a href="/auth/profile" class="flex items-center gap-3 px-6 py-3 hover:bg-blue-300 hover:text-blue-900 rounded-r-full transition-all duration-200">
+            <i class="fas fa-user-circle text-blue-600"></i> Profile
+          </a>
+        </li>
+        <li>
+          <a href="/jobs/current" class="flex items-center gap-3 px-6 py-3 hover:bg-blue-300 hover:text-blue-900 rounded-r-full transition-all duration-200">
+            <i class="fas fa-clock text-blue-600"></i> Current Jobs
+          </a>
+        </li>
+        <li>
+          <a href="/status" class="flex items-center gap-3 px-6 py-3 hover:bg-blue-300 hover:text-blue-900 rounded-r-full transition-all duration-200">
+            <i class="fas fa-tasks text-blue-600"></i> View Status
+          </a>
+        </li>
+      <% } %>
+    </ul>
+
+    <!-- Footer / Logout -->
+    <div class="mt-auto p-4 bg-blue-50 border-t border-blue-300 text-center flex flex-col items-center gap-2">
+      <% if (user) { %>
+        <a href="/auth/logout" class="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200 shadow-sm">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      <% } else { %>
+        <a href="/auth/login" class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200 shadow-sm">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+      <% } %>
+
+      <span class="text-gray-500 text-xs mt-1 italic">
+        <% if (user) { %>
+          Welcome, <%= user.name %>!
+        <% } else { %>
+          Access all pages freely
+        <% } %>
+      </span>
+    </div>
+  </div>
+</div>
+<!-- Sidebar End -->
+
+<!-- Sidebar Toggle Script -->
+<script>
+  const menuBtn = document.getElementById('menu-btn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  if (menuBtn && sidebar && overlay) {
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+    });
+
+    overlay.addEventListener('click', () => {
+      sidebar.classList.add('-translate-x-full');
+      overlay.classList.add('hidden');
+    });
+  }
+</script>

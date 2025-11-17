@@ -1,0 +1,104 @@
+<%- include('../partials/header') %>
+
+<div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 sm:p-6 md:p-10">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- 🌟 Dashboard Header -->
+    <div class="flex flex-col sm:flex-row items-center justify-between bg-white rounded-3xl shadow-2xl p-6 mb-10 relative overflow-hidden text-center sm:text-left">
+      <!-- Decorative gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-r from-indigo-200 via-purple-100 to-pink-50 opacity-30 rounded-3xl pointer-events-none"></div>
+
+      <div class="flex flex-col sm:flex-row items-center gap-4 relative z-10">
+        <!-- Company Logo -->
+        <img src="https://alobhahrms.com/storage/uploads/logo/logo-dark.png"
+             alt="Company Logo"
+             class="h-12 sm:h-16 w-auto rounded-md shadow-sm">
+
+        <!-- Text Info -->
+        <div>
+          <h1 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-indigo-700 tracking-tight">Available Tests</h1>
+          <p class="text-gray-600 text-sm mt-1">Choose a test below and start your assessment.</p>
+        </div>
+      </div>
+
+      <!-- Candidate Info -->
+      <div class="mt-4 sm:mt-0 relative z-10 text-sm text-gray-700">
+        Logged in as: 
+        <span class="font-semibold text-indigo-600 block sm:inline"><%= user.name %></span>
+      </div>
+    </div>
+
+    <!-- 🔍 Filter Message (if test filtered by title) -->
+    <% if (typeof title !== 'undefined' && title) { %>
+      <div class="bg-indigo-100 border-l-4 border-indigo-600 text-indigo-800 p-4 rounded-xl mb-8 shadow-sm text-center sm:text-left">
+        <p class="font-medium">
+          Showing test results for: 
+          <span class="font-semibold"><%= title %></span>
+        </p>
+      </div>
+    <% } %>
+
+    <!-- 🧩 Tests Grid -->
+    <% if (tests.length > 0) { %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <% tests.forEach(test => { %>
+          <div class="relative bg-white rounded-3xl shadow-2xl p-6 overflow-hidden hover:shadow-3xl transition-transform transform hover:-translate-y-2 duration-300">
+            <div class="absolute inset-0 bg-gradient-to-tr from-indigo-100 via-purple-50 to-pink-50 opacity-20 pointer-events-none rounded-3xl"></div>
+
+            <div class="relative z-10 flex flex-col h-full">
+              <!-- Title clickable -->
+              <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
+                <a href="/candidate/tests?title=<%= encodeURIComponent(test.title) %>" 
+                   class="hover:text-indigo-700 transition-colors duration-200 break-words">
+                   <%= test.title %>
+                </a>
+              </h3>
+
+              <p class="text-gray-600 text-sm mb-4 line-clamp-3"><%= test.description %></p>
+
+              <div class="grid grid-cols-2 gap-4 mb-4 text-gray-700 text-sm font-medium">
+                <div class="flex flex-col">
+                  <span>Duration</span>
+                  <span class="font-semibold"><%= test.durationMinutes %> mins</span>
+                </div>
+                <div class="flex flex-col">
+                  <span>Passing Marks</span>
+                  <span class="font-semibold"><%= test.passingMarks %></span>
+                </div>
+                <div class="flex flex-col">
+                  <span>Total Marks</span>
+                  <span class="font-semibold"><%= test.totalMarks %></span>
+                </div>
+                <div class="flex flex-col">
+                  <span>Assigned Date</span>
+                  <span class="font-semibold whitespace-nowrap"><%= test.createdAt.toDateString() %></span>
+                </div>
+              </div>
+
+              <!-- Start / Already Taken Button -->
+              <div class="mt-auto">
+                <a href="<%= takenTestIds.includes(test.id) ? '#' : `/candidate/test/${test.id}/start` %>"
+                   class="inline-block w-full sm:w-auto mt-2 px-6 py-2 rounded-full font-semibold shadow-md transition-all duration-300 text-center
+                          <%= takenTestIds.includes(test.id)
+                              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                              : 'bg-indigo-600 text-white hover:bg-indigo-700' %>">
+                  <%= takenTestIds.includes(test.id) ? 'Already Taken' : 'Start Test →' %>
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <!-- Empty State -->
+      <div class="text-center py-16 sm:py-20 bg-white rounded-xl shadow-xl border border-gray-200">
+        <h3 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-3">No Tests Available</h3>
+        <p class="text-gray-500 text-sm sm:text-base">
+          Once your recruiter assigns a test, it will appear here.
+        </p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

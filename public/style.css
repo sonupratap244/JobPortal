@@ -1,0 +1,274 @@
+/* Reset & base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f4f7fb;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Container */
+.container {
+  width: 90%;
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 26px;
+  color: #2c3e50;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 15px;
+}
+table th,
+table td {
+  padding: 12px 15px;
+  border: 1px solid #e1e5eb;
+  text-align: left;
+}
+table th {
+  background: #3498db;
+  color: #fff;
+  font-weight: 600;
+}
+table tr:nth-child(even) {
+  background: #f9fbfd;
+}
+table tr:hover {
+  background: #ecf5ff;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s ease-in-out;
+}
+.btn-primary {
+  background: #3498db;
+  color: white;
+}
+.btn-primary:hover {
+  background: #2980b9;
+}
+.btn-secondary {
+  background: #95a5a6;
+  color: white;
+}
+.btn-secondary:hover {
+  background: #7f8c8d;
+}
+.btn-success {
+  background: #2ecc71;
+  color: white;
+}
+.btn-success:hover {
+  background: #27ae60;
+}
+.btn-danger {
+  background: #e74c3c;
+  color: white;
+}
+.btn-danger:hover {
+  background: #c0392b;
+}
+
+/* Button group */
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Forms */
+form label {
+  font-weight: 600;
+  margin-top: 15px;
+  display: block;
+}
+form input,
+form select,
+form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d9e6;
+  border-radius: 6px;
+  margin-top: 6px;
+  font-size: 14px;
+}
+form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+form input:focus,
+form textarea:focus,
+form select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 4px rgba(52, 152, 219, 0.4);
+}
+
+/* Checkbox */
+input[type="checkbox"] {
+  width: auto;
+  margin-right: 6px;
+}
+
+/* Alerts & errors */
+.alert {
+  background: #fdecea;
+  color: #e74c3c;
+  padding: 12px;
+  border: 1px solid #f5c2c0;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+.field-error {
+  color: #e74c3c;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* Container */
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Buttons */
+.btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+  margin: 2px;
+  transition: all 0.2s ease;
+}
+.btn-primary {
+  background: #007bff;
+  color: white;
+  border: none;
+}
+.btn-primary:hover {
+  background: #0056b3;
+}
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+.btn-secondary:hover {
+  background: #545b62;
+}
+
+/* Filter Form */
+.filter-form {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 20px 0;
+  padding: 12px 16px;
+  background: #f9fafc;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.filter-form label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  margin-right: 4px;
+}
+.filter-form select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.85rem;
+  min-width: 120px;
+  transition: all 0.2s ease;
+}
+.filter-form select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0,123,255,0.4);
+}
+.filter-form button {
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: #007bff;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.filter-form button:hover {
+  background: #0056b3;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+th {
+  background: #007bff;
+  color: white;
+}
+tr:nth-child(even) { background: #f9f9f9; }
+
+/* Pagination */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.pagination a {
+  padding: 6px 12px;
+  border: 1px solid #007bff;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.pagination a:hover {
+  background: #007bff;
+  color: white;
+}
+.pagination a.active {
+  background: #007bff;
+  color: white;
+}

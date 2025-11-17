@@ -1,0 +1,35 @@
+<div class="min-h-screen flex">
+
+  <!-- Sidebar -->
+  <div class="w-64">
+    <%- include('../partials/sidebar', { user }) %>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="flex-1">
+    <%- include('../partials/header') %>
+
+    <div class="p-6 max-w-5xl mx-auto">
+      <% if (test) { %>
+        <h1 class="text-3xl font-bold mb-6">Question Paper - <%= test.title %></h1>
+        <p class="mb-4 text-gray-700">Description: <%= test.description || 'No description' %></p>
+
+        <% if (test.questions && test.questions.length === 0) { %>
+          <p class="text-red-500">No questions available for this test.</p>
+        <% } else { %>
+          <ol class="list-decimal ml-6 space-y-4">
+            <% test.questions.forEach((question) => { %>
+              <li class="border-b pb-4">
+                <p class="text-lg"><strong>Q:</strong> <%= question.text %></p>
+                <p class="text-sm text-gray-600"><strong>Marks:</strong> <%= question.marks %></p>
+              </li>
+            <% }); %>
+          </ol>
+        <% } %>
+      <% } else { %>
+        <p class="text-red-600 font-semibold">Test not found.</p>
+      <% } %>
+    </div>
+
+  </div>
+</div>

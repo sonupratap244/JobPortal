@@ -1,0 +1,65 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<main class="ml-64 p-6 max-w-6xl mx-auto">
+  <h1 class="text-3xl font-bold mb-6">Manage Questions</h1>
+
+  <% if (tests.length === 0) { %>
+    <p class="text-gray-700">No tests found.</p>
+  <% } %>
+
+  <% tests.forEach(test => { %>
+    <section class="mb-10 border rounded-lg shadow-md p-6 bg-white">
+      <header class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-semibold"><%= test.title %></h2>
+        <div>
+          <a href="/questions/create/<%= test.id %>" 
+             class="bg-green-600 text-white px-4 py-2 rounded mr-3 hover:bg-green-700 transition">
+            Add Question
+          </a>
+          <a href="/questions/view-paper/<%= test.id %>" 
+             class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+            View Question Paper
+          </a>
+        </div>
+      </header>
+
+      <p class="mb-3 text-gray-600 italic">Description: <%= test.description || 'No description' %></p>
+      <p class="mb-5 font-semibold">Total Questions: <%= test.questions.length %></p>
+
+      <% if (test.questions.length === 0) { %>
+        <p class="text-gray-700">No questions for this test yet.</p>
+      <% } else { %>
+        <table class="w-full border border-gray-300 rounded-lg overflow-hidden">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="border-b border-gray-300 px-5 py-3 text-left">#</th>
+              <th class="border-b border-gray-300 px-5 py-3 text-left">Question</th>
+              <th class="border-b border-gray-300 px-5 py-3 text-left w-24">Marks</th>
+              <th class="border-b border-gray-300 px-5 py-3 text-left w-48">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% test.questions.forEach((question, idx) => { %>
+              <tr class="<%= idx % 2 === 0 ? 'bg-white' : 'bg-gray-50' %>">
+                <td class="border-b border-gray-300 px-5 py-3"><%= idx + 1 %></td>
+                <td class="border-b border-gray-300 px-5 py-3"><%= question.text %></td>
+                <td class="border-b border-gray-300 px-5 py-3 font-semibold"><%= question.marks %></td>
+                <td class="border-b border-gray-300 px-5 py-3 space-x-4">
+                  <a href="/questions/edit/<%= question.id %>" class="text-blue-600 hover:underline">Edit</a>
+
+                  <form action="/questions/delete/<%= question.id %>" method="POST" class="inline" 
+                        onsubmit="return confirm('Are you sure you want to delete this question?');">
+                    <button type="submit" class="text-red-600 hover:underline bg-transparent border-none cursor-pointer p-0 m-0">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } %>
+    </section>
+  <% }); %>
+</main>

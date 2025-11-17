@@ -1,0 +1,4 @@
+<%- include('../partials/header') %>
+<h2>Result</h2>
+<p>Score: <%= score %> / <%= total %></p>
+<p><%= (passed === null) ? 'Manual review required' : (passed ? 'Passed' : 'Failed') %></p>

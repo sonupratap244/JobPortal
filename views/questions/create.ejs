@@ -1,0 +1,120 @@
+<%- include('../partials/header') %> <%- include('../partials/sidebar') %>
+
+<main class="p-6 max-w-3xl mx-auto">
+  <h1 class="text-2xl font-bold mb-6">Add Question with Options</h1>
+  
+
+  <form
+    action="/questions/create"
+    method="POST"
+    class="space-y-6 bg-white p-6 rounded-lg shadow-md"
+  >
+    <!-- Hidden testId -->
+    <input type="hidden" name="testId" value="<%= testId %>" />
+
+    <!-- Question Text -->
+    <div>
+      <label for="text" class="block font-semibold mb-2">Question Text</label>
+      <textarea
+        id="text"
+        name="text"
+        required
+        rows="4"
+        class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      ></textarea>
+    </div>
+
+    <!-- Marks -->
+    <div>
+      <label for="marks" class="block font-semibold mb-2">Marks</label>
+      <input
+        type="number"
+        id="marks"
+        name="marks"
+        required
+        min="1"
+        class="w-full border p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+
+    <!-- Options Section -->
+    <div id="optionsContainer">
+      <label class="block font-semibold mb-2">Options</label>
+
+      <!-- Single Option Template -->
+      <div class="option flex items-center mb-3 space-x-3">
+        <input
+          type="text"
+          name="options[text][]"
+          placeholder="Option text"
+          required
+          class="flex-1 border p-2 rounded"
+        />
+        <label class="flex items-center space-x-1">
+          <input type="checkbox" name="options[correct][]" value="0" />
+          <span>Correct</span>
+        </label>
+        <button
+          type="button"
+          class="removeOptionBtn bg-red-500 text-white px-2 rounded hover:bg-red-600"
+        >
+          Remove
+        </button>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      id="addOptionBtn"
+      class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+    >
+       Add Option
+    </button>
+
+    <!-- Submit -->
+    <div>
+      <button
+        type="submit"
+        class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition"
+      >
+        Add Question
+      </button>
+    </div>
+  </form>
+</main>
+
+<script>
+  const optionsContainer = document.getElementById("optionsContainer");
+  const addOptionBtn = document.getElementById("addOptionBtn");
+
+  addOptionBtn.addEventListener("click", () => {
+    const optionCount = optionsContainer.querySelectorAll(".option").length;
+    const div = document.createElement("div");
+    div.className = "option flex items-center mb-3 space-x-3";
+
+    div.innerHTML = `
+      <input type="text" name="options[text][]" placeholder="Option text" required class="flex-1 border p-2 rounded" />
+      <label class="flex items-center space-x-1">
+        <input type="checkbox" name="options[correct][]" value="${optionCount}" />
+        <span>Correct</span>
+      </label>
+      <button type="button" class="removeOptionBtn bg-red-500 text-white px-2 rounded hover:bg-red-600">Remove</button>
+    `;
+
+    optionsContainer.appendChild(div);
+
+    // Attach remove listener
+    div.querySelector(".removeOptionBtn").addEventListener("click", () => {
+      div.remove();
+    });
+  });
+
+  // Remove button for initial option
+  optionsContainer
+    .querySelector(".removeOptionBtn")
+    .addEventListener("click", function () {
+      this.parentElement.remove();
+    });
+</script>
+
+<%- include('../partials/footer') %>

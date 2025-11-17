@@ -1,0 +1,264 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="ml-0 md:ml-64 p-6 md:p-8 bg-gray-100 min-h-screen">
+  <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-3xl font-bold mb-6 text-blue-700">Apply for Job</h1>
+
+    <% if (error) { %>
+      <div class="bg-red-100 text-red-700 p-3 mb-4 rounded"><%= error %></div>
+    <% } %>
+
+    <form id="candidateForm" action="/candidates/create" method="POST" enctype="multipart/form-data">
+
+      <!-- Job Applied For -->
+      <div class="mb-4">
+        <label class="block font-semibold mb-2">
+          Job Applied For <span class="text-red-500">*</span>
+        </label>
+        <select name="jobId" class="border border-gray-300 p-3 w-full rounded focus:ring focus:ring-blue-300" required>
+          <option value="">Select Job</option>
+          <% jobs.forEach(job => { %>
+            <option value="<%= job.id %>" <%= selectedJobId == job.id ? 'selected' : '' %>><%= job.title %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Basic Info -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <input type="text" 
+          name="name" 
+          value="<%= user.name %>" 
+          placeholder="Full Name" 
+          class="border p-3 rounded w-full bg-gray-100 text-gray-700 cursor-not-allowed" 
+          readonly required>
+
+        <input type="date" name="dob" placeholder="Date of Birth" class="border p-3 rounded w-full" required>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <input type="number" name="age" placeholder="Age (Auto)" readonly class="border p-3 rounded w-full">
+        <select name="maritalStatus" class="border p-3 rounded w-full">
+          <option value="">Select Marital Status</option>
+          <option value="Unmarried">Unmarried</option>
+          <option value="Married">Married</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <input type="tel" name="contactNo" placeholder="Contact Number" class="border p-3 rounded w-full" required>
+
+        <input type="email" name="email" value="<%= user.email %>" 
+          class="border p-3 rounded w-full bg-gray-100 text-gray-700 cursor-not-allowed" readonly>
+
+        <input type="hidden" name="userEmail" value="<%= user.email %>">
+      </div>
+
+      <textarea name="address" rows="2" placeholder="Address" class="border p-3 rounded w-full mb-4"></textarea>
+
+      <!-- Fresher -->
+      <div class="mb-6 flex items-center space-x-2">
+        <input type="checkbox" id="isFresher" name="fresher" class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-400">
+        <label for="isFresher" class="text-gray-700 font-semibold">I am a Fresher (No Work Experience)</label>
+      </div>
+
+      <!-- EXPERIENCE -->
+      <div id="experience-section" class="mb-8">
+        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 shadow-sm">
+          <h2 class="text-xl font-semibold mb-3 text-gray-800 flex items-center gap-2">
+            <i class="fas fa-briefcase text-blue-600"></i> Work Experience
+          </h2>
+          <div id="experience-wrapper" class="space-y-3">
+            <div class="flex flex-wrap md:flex-nowrap items-center gap-3 bg-white p-3 rounded-lg border border-gray-200">
+              <input type="text" name="experiences[company][]" placeholder="Company" class="border p-2 w-full md:w-[15%] rounded">
+              <input type="text" name="experiences[designation][]" placeholder="Designation" class="border p-2 w-full md:w-[15%] rounded">
+              <input type="date" name="experiences[from][]" class="border p-2 w-full md:w-[15%] rounded">
+              <input type="date" name="experiences[to][]" class="border p-2 w-full md:w-[15%] rounded">
+              <input type="text" name="experiences[salary][]" placeholder="Salary" class="border p-2 w-full md:w-[15%] rounded">
+              <input type="text" name="experiences[reasonLeaving][]" placeholder="Reason for Leaving" class="border p-2 w-full md:w-[20%] rounded">
+              <a href="#" class="removeExperience bg-red-500 hover:bg-red-600 text-white p-2 rounded-full flex items-center justify-center">
+                <i class="fas fa-trash text-sm"></i>
+              </a>
+            </div>
+          </div>
+          <a href="#" id="addExperience" class="mt-3 inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full">
+            <i class="fas fa-plus text-sm"></i> Add Experience
+          </a>
+        </div>
+      </div>
+
+      <!-- QUALIFICATIONS -->
+      <div class="mb-8">
+        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 shadow-sm">
+          <h2 class="text-xl font-semibold mb-3 text-gray-800 flex items-center gap-2">
+            <i class="fas fa-graduation-cap text-blue-600"></i> Educational Qualifications
+          </h2>
+          <div id="qualification-wrapper" class="space-y-3">
+            <div class="flex flex-wrap md:flex-nowrap items-center gap-3 bg-white p-3 rounded-lg border border-gray-200">
+              <input type="text" name="qualifications[course][]" placeholder="Course" class="border p-2 w-full md:w-[20%] rounded">
+              <input type="text" name="qualifications[board][]" placeholder="Board/University" class="border p-2 w-full md:w-[25%] rounded">
+              <input type="text" name="qualifications[year][]" placeholder="Year" class="border p-2 w-full md:w-[15%] rounded">
+              <input type="text" name="qualifications[division][]" placeholder="Division" class="border p-2 w-full md:w-[15%] rounded">
+              <a href="#" class="removeQualification bg-red-500 hover:bg-red-600 text-white p-2 rounded-full flex items-center justify-center">
+                <i class="fas fa-trash text-sm"></i>
+              </a>
+            </div>
+          </div>
+          <a href="#" id="addQualification" class="mt-3 inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full">
+            <i class="fas fa-plus text-sm"></i> Add Qualification
+          </a>
+        </div>
+      </div>
+
+      <!-- REFERENCES -->
+      <div class="mb-8">
+        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 shadow-sm">
+          <h2 class="text-xl font-semibold mb-3 text-gray-800 flex items-center gap-2">
+            <i class="fas fa-user-tie text-blue-600"></i> References
+          </h2>
+          <div id="reference-wrapper" class="space-y-3">
+            <div class="flex flex-wrap md:flex-nowrap items-center gap-3 bg-white p-3 rounded-lg border border-gray-200">
+              <input type="text" name="references[name][]" placeholder="Name" class="border p-2 w-full md:w-[25%] rounded">
+              <input type="text" name="references[designation][]" placeholder="Designation" class="border p-2 w-full md:w-[25%] rounded">
+              <input type="text" name="references[company][]" placeholder="Company" class="border p-2 w-full md:w-[25%] rounded">
+              <a href="#" class="removeReference bg-red-500 hover:bg-red-600 text-white p-2 rounded-full flex items-center justify-center">
+                <i class="fas fa-trash text-sm"></i>
+              </a>
+            </div>
+          </div>
+          <a href="#" id="addReference" class="mt-3 inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full">
+            <i class="fas fa-plus text-sm"></i> Add Reference
+          </a>
+        </div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="mb-4">
+        <label class="block font-semibold mb-2">Key Technical Skills <span class="text-red-500">*</span></label>
+        <textarea name="technicalSkills" rows="2" class="border p-3 w-full rounded" required></textarea>
+      </div>
+      <div class="mb-4">
+        <label class="block font-semibold mb-2">Major Strengths</label>
+        <textarea name="strengths" rows="2" class="border p-3 w-full rounded"></textarea>
+      </div>
+      <div class="mb-4">
+        <label class="block font-semibold mb-2">Major Achievements</label>
+        <textarea name="achievements" rows="2" class="border p-3 w-full rounded"></textarea>
+      </div>
+
+      <!-- Upload -->
+      <div class="mb-6">
+        <label class="block font-semibold mb-2">Upload Resume / Documents <span class="text-red-500">*</span></label>
+        <input type="file" name="documents" multiple class="border p-3 w-full rounded" required>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold shadow-md">
+          Submit Application
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+<script>
+  // Auto Age
+  const dobInput = document.querySelector('input[name="dob"]');
+  const ageInput = document.querySelector('input[name="age"]');
+  if (dobInput) {
+    dobInput.addEventListener('change', () => {
+      if (dobInput.value) {
+        const dob = new Date(dobInput.value);
+        const diff = Date.now() - dob.getTime();
+        const age = new Date(diff).getUTCFullYear() - 1970;
+        ageInput.value = age;
+      }
+    });
+  }
+
+  // Fresher Toggle
+  const fresherCheckbox = document.getElementById('isFresher');
+  const experienceSection = document.getElementById('experience-section');
+  fresherCheckbox.addEventListener('change', () => {
+    experienceSection.style.display = fresherCheckbox.checked ? 'none' : 'block';
+  });
+
+  // Dynamic Add/Remove
+  const addDynamicField = (wrapperId, html) => {
+    document.getElementById(wrapperId).insertAdjacentHTML('beforeend', html);
+  };
+
+  // Experience
+  document.getElementById('addExperience').addEventListener('click', e => {
+    e.preventDefault();
+    addDynamicField('experience-wrapper', `
+      <div class="flex flex-wrap md:flex-nowrap items-center gap-3 bg-white p-3 rounded-lg border border-gray-200">
+        <input type="text" name="experiences[company][]" placeholder="Company" class="border p-2 w-full md:w-[15%] rounded">
+        <input type="text" name="experiences[designation][]" placeholder="Designation" class="border p-2 w-full md:w-[15%] rounded">
+        <input type="date" name="experiences[from][]" class="border p-2 w-full md:w-[15%] rounded">
+        <input type="date" name="experiences[to][]" class="border p-2 w-full md:w-[15%] rounded">
+        <input type="text" name="experiences[salary][]" placeholder="Salary" class="border p-2 w-full md:w-[15%] rounded">
+        <input type="text" name="experiences[reasonLeaving][]" placeholder="Reason for Leaving" class="border p-2 w-full md:w-[20%] rounded">
+        <a href="#" class="removeExperience bg-red-500 hover:bg-red-600 text-white p-2 rounded-full flex items-center justify-center">
+          <i class="fas fa-trash text-sm"></i>
+        </a>
+      </div>`);
+  });
+  document.getElementById('experience-wrapper').addEventListener('click', e => {
+    if (e.target.closest('.removeExperience')) e.target.closest('div.flex').remove();
+  });
+
+  // Qualification
+  document.getElementById('addQualification').addEventListener('click', e => {
+    e.preventDefault();
+    addDynamicField('qualification-wrapper', `
+      <div class="flex flex-wrap md:flex-nowrap items-center gap-3 bg-white p-3 rounded-lg border border-gray-200">
+        <input type="text" name="qualifications[course][]" placeholder="Course" class="border p-2 w-full md:w-[20%] rounded">
+        <input type="text" name="qualifications[board][]" placeholder="Board/University" class="border p-2 w-full md:w-[25%] rounded">
+        <input type="text" name="qualifications[year][]" placeholder="Year" class="border p-2 w-full md:w-[15%] rounded">
+        <input type="text" name="qualifications[division][]" placeholder="Division" class="border p-2 w-full md:w-[15%] rounded">
+        <a href="#" class="removeQualification bg-red-500 hover:bg-red-600 text-white p-2 rounded-full flex items-center justify-center">
+          <i class="fas fa-trash text-sm"></i>
+        </a>
+      </div>`);
+  });
+  document.getElementById('qualification-wrapper').addEventListener('click', e => {
+    if (e.target.closest('.removeQualification')) e.target.closest('div.flex').remove();
+  });
+
+  // References
+  document.getElementById('addReference').addEventListener('click', e => {
+    e.preventDefault();
+    addDynamicField('reference-wrapper', `
+      <div class="flex flex-wrap md:flex-nowrap items-center gap-3 bg-white p-3 rounded-lg border border-gray-200">
+        <input type="text" name="references[name][]" placeholder="Name" class="border p-2 w-full md:w-[25%] rounded">
+        <input type="text" name="references[designation][]" placeholder="Designation" class="border p-2 w-full md:w-[25%] rounded">
+        <input type="text" name="references[company][]" placeholder="Company" class="border p-2 w-full md:w-[25%] rounded">
+        <a href="#" class="removeReference bg-red-500 hover:bg-red-600 text-white p-2 rounded-full flex items-center justify-center">
+          <i class="fas fa-trash text-sm"></i>
+        </a>
+      </div>`);
+  });
+  document.getElementById('reference-wrapper').addEventListener('click', e => {
+    if (e.target.closest('.removeReference')) e.target.closest('div.flex').remove();
+  });
+
+  // Contact Validation
+  document.getElementById('candidateForm').addEventListener('submit', e => {
+    document.querySelectorAll('.error-text').forEach(el => el.remove());
+    const contact = document.querySelector('input[name="contactNo"]');
+    const pattern = /^[0-9]{10}$/;
+    if (!pattern.test(contact.value)) {
+      const p = document.createElement('p');
+      p.classList.add('text-red-500', 'text-sm', 'mt-1', 'error-text');
+      p.innerText = 'Enter a valid 10-digit number';
+      contact.parentNode.appendChild(p);
+      e.preventDefault();
+    }
+  });
+</script>
